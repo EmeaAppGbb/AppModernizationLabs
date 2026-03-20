@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 8" shape-rendering="crispEdges">
+  <!-- Castle rampart / pixel zigzag repeating pattern -->
+  <!-- This tiles horizontally via CSS background-repeat -->
+  <rect x="0" y="4" width="64" height="4" fill="#4a4a8a"/>
+  <!-- Battlements -->
+  <rect x="0" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="8" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="16" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="24" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="32" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="40" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="48" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <rect x="56" y="0" width="4" height="4" fill="#4a4a8a"/>
+  <!-- Accent dots on the battlements -->
+  <rect x="1" y="1" width="2" height="2" fill="#00d4aa" opacity="0.4"/>
+  <rect x="17" y="1" width="2" height="2" fill="#ff6b9d" opacity="0.4"/>
+  <rect x="33" y="1" width="2" height="2" fill="#ffd93d" opacity="0.4"/>
+  <rect x="49" y="1" width="2" height="2" fill="#00d4aa" opacity="0.4"/>
+</svg>

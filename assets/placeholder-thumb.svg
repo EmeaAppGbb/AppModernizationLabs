@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" shape-rendering="crispEdges">
+  <!-- Background -->
+  <rect width="320" height="180" fill="#0f0f23"/>
+  <!-- Stars -->
+  <rect x="20" y="12" width="4" height="4" fill="#e8e8e8" opacity="0.8"/>
+  <rect x="60" y="28" width="4" height="4" fill="#e8e8e8" opacity="0.5"/>
+  <rect x="120" y="8" width="4" height="4" fill="#ffd93d" opacity="0.7"/>
+  <rect x="200" y="16" width="4" height="4" fill="#e8e8e8" opacity="0.6"/>
+  <rect x="260" y="24" width="4" height="4" fill="#e8e8e8" opacity="0.4"/>
+  <rect x="280" y="8" width="4" height="4" fill="#ffd93d" opacity="0.5"/>
+  <rect x="160" y="20" width="4" height="4" fill="#e8e8e8" opacity="0.3"/>
+  <rect x="40" y="40" width="4" height="4" fill="#e8e8e8" opacity="0.2"/>
+  <rect x="300" y="36" width="4" height="4" fill="#e8e8e8" opacity="0.5"/>
+  <!-- Pixel clouds -->
+  <rect x="80" y="32" width="40" height="8" fill="#4a4a8a" opacity="0.3"/>
+  <rect x="84" y="28" width="32" height="4" fill="#4a4a8a" opacity="0.2"/>
+  <rect x="220" y="40" width="32" height="8" fill="#4a4a8a" opacity="0.2"/>
+  <rect x="224" y="36" width="24" height="4" fill="#4a4a8a" opacity="0.15"/>
+  <!-- Retro Monitor -->
+  <rect x="100" y="48" width="120" height="80" fill="#4a4a8a"/>
+  <rect x="104" y="52" width="112" height="72" fill="#1a1a3a"/>
+  <!-- Monitor screen content — code lines -->
+  <rect x="112" y="60" width="32" height="4" fill="#00d4aa"/>
+  <rect x="120" y="68" width="48" height="4" fill="#ff6b9d"/>
+  <rect x="120" y="76" width="36" height="4" fill="#e8e8e8" opacity="0.6"/>
+  <rect x="120" y="84" width="56" height="4" fill="#ffd93d"/>
+  <rect x="112" y="92" width="24" height="4" fill="#00d4aa"/>
+  <rect x="120" y="100" width="44" height="4" fill="#e8e8e8" opacity="0.4"/>
+  <rect x="112" y="108" width="16" height="4" fill="#00d4aa"/>
+  <!-- Monitor cursor blink -->
+  <rect x="172" y="100" width="4" height="4" fill="#00d4aa" opacity="0.8"/>
+  <!-- Monitor stand -->
+  <rect x="148" y="128" width="24" height="8" fill="#4a4a8a"/>
+  <rect x="140" y="136" width="40" height="4" fill="#4a4a8a"/>
+  <!-- Pixel ground/desk -->
+  <rect x="0" y="148" width="320" height="4" fill="#4a4a8a" opacity="0.4"/>
+  <!-- Decorative pixel items on desk -->
+  <!-- Coffee mug -->
+  <rect x="60" y="132" width="16" height="16" fill="#ff6b9d" opacity="0.6"/>
+  <rect x="64" y="136" width="8" height="8" fill="#0f0f23"/>
+  <rect x="76" y="136" width="4" height="4" fill="#ff6b9d" opacity="0.4"/>
+  <!-- Little pixel plant -->
+  <rect x="248" y="128" width="8" height="20" fill="#4a4a8a" opacity="0.5"/>
+  <rect x="244" y="120" width="4" height="8" fill="#00d4aa" opacity="0.6"/>
+  <rect x="256" y="116" width="4" height="12" fill="#00d4aa" opacity="0.5"/>
+  <rect x="248" y="112" width="8" height="8" fill="#00d4aa" opacity="0.7"/>
+  <!-- Bottom border decoration -->
+  <rect x="0" y="160" width="320" height="4" fill="#4a4a8a" opacity="0.2"/>
+  <rect x="0" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="12" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="24" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="36" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="48" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="60" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="72" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="84" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="96" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="108" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="120" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="132" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="144" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="156" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="168" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="180" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="192" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="204" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="216" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="228" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="240" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="252" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="264" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="276" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <rect x="288" y="168" width="8" height="4" fill="#00d4aa" opacity="0.3"/>
+  <rect x="300" y="168" width="8" height="4" fill="#ff6b9d" opacity="0.3"/>
+  <rect x="312" y="168" width="8" height="4" fill="#ffd93d" opacity="0.3"/>
+  <!-- "LAB" text hint on screen -->
+  <rect x="180" y="60" width="20" height="4" fill="#ffd93d" opacity="0.3"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- Pixel coin -->
+  <rect x="4" y="1" width="8" height="2" fill="#ffd93d"/>
+  <rect x="2" y="3" width="2" height="2" fill="#ffd93d"/>
+  <rect x="12" y="3" width="2" height="2" fill="#ffd93d"/>
+  <rect x="1" y="5" width="2" height="6" fill="#ffd93d"/>
+  <rect x="13" y="5" width="2" height="6" fill="#ffd93d"/>
+  <rect x="2" y="11" width="2" height="2" fill="#ffd93d"/>
+  <rect x="12" y="11" width="2" height="2" fill="#ffd93d"/>
+  <rect x="4" y="13" width="8" height="2" fill="#ffd93d"/>
+  <!-- Inner fill -->
+  <rect x="3" y="3" width="10" height="10" fill="#ffd93d"/>
+  <!-- Dollar/star emblem -->
+  <rect x="7" y="4" width="2" height="8" fill="#e8a800"/>
+  <rect x="5" y="5" width="6" height="2" fill="#e8a800"/>
+  <rect x="5" y="9" width="6" height="2" fill="#e8a800"/>
+  <!-- Shine -->
+  <rect x="4" y="3" width="2" height="2" fill="#fff5b0"/>
+  <rect x="3" y="5" width="2" height="2" fill="#fff5b0"/>
+</svg>
