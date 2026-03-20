@@ -5,6 +5,11 @@
 - **Stack:** HTML, CSS, JavaScript, GitHub Actions, GitHub Pages
 - **Created:** 2026-03-20
 
+## Team Updates (2026-03-20)
+
+- **Pages deployment strategy accepted:** Chunk's branch-based approach eliminates GitHub Pages API complexity. Team awaits repo settings configuration.
+- **Workflow chaining verified:** `process-labs` → `deploy-pages` chain confirmed working via path triggers on `appmodlab.json`.
+
 ## Learnings
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
