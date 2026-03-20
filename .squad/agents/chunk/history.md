@@ -9,6 +9,10 @@
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 
+- **Pages deployment switched to branch-based model:** Replaced `actions/deploy-pages` (GitHub Pages API) with a `pages` orphan branch strategy. The `deploy-pages.yml` workflow now syncs site files from `main` to the `pages` branch on push. GitHub Pages should be configured to serve from the `pages` branch root. This avoids the `_site` staging directory and `upload-pages-artifact` entirely.
+- **Workflow chaining via path triggers:** `process-labs.yml` commits `appmodlab.json` to `main` → `deploy-pages.yml` triggers on `appmodlab.json` path changes → syncs to `pages` branch. No explicit workflow dispatch needed; the path trigger creates automatic chaining.
+- **Orphan branch creation gotcha on Windows:** When creating an orphan branch, all tracked files become untracked. Switching back to `main` requires `git checkout -f main` to force-overwrite the untracked files that conflict with main's tracked files.
+
 - **CI/CD pipeline architecture:** Three workflows established — `process-labs.yml` (reads labs.md → builds appmodlab.json), `process-new-lab-issue.yml` (validates issue submissions → creates PRs), `deploy-pages.yml` (deploys site to GitHub Pages). All use Python for YAML/API processing — no extra tooling needed since `pyyaml` is pip-installable and `urllib` is stdlib.
 - **labs.md is the source of truth:** The master lab list lives in `labs.md` at repo root. One GitHub URL per line. The process-labs workflow parses it, fetches APPMODLAB.MD from each repo via GitHub API, and outputs `appmodlab.json`.
 - **GitHub Pages deployment uses a staging directory (`_site`):** The `upload-pages-artifact` action doesn't support `exclude`, so we copy files to `_site/` first, omitting `.git`, `.squad`, `.github`, `.copilot`, etc.
