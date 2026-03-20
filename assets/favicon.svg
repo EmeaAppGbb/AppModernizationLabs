@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- Dark background -->
+  <rect width="16" height="16" fill="#0f0f23"/>
+  <!-- Pixel "M" for Mod Labs -->
+  <rect x="2" y="3" width="2" height="10" fill="#00d4aa"/>
+  <rect x="4" y="4" width="2" height="2" fill="#00d4aa"/>
+  <rect x="6" y="5" width="2" height="2" fill="#00d4aa"/>
+  <rect x="8" y="4" width="2" height="2" fill="#00d4aa"/>
+  <rect x="10" y="5" width="2" height="2" fill="#00d4aa"/>
+  <rect x="12" y="3" width="2" height="10" fill="#00d4aa"/>
+  <!-- Pixel sparkle -->
+  <rect x="7" y="1" width="2" height="2" fill="#ffd93d"/>
+  <rect x="6" y="8" width="4" height="2" fill="#00d4aa" opacity="0.5"/>
+</svg>

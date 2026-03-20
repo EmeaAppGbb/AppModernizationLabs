@@ -1,0 +1,57 @@
+name: "🎮 Add New Lab"
+description: "Submit a new application modernization lab to the gallery"
+title: "[New Lab]: "
+labels: ["new-lab"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting a lab! Please fill out the info below.
+        Make sure your repository has an `APPMODLAB.MD` file at the root.
+  - type: input
+    id: repo-url
+    attributes:
+      label: "Repository URL"
+      description: "Full GitHub URL of your lab repository"
+      placeholder: "https://github.com/owner/repo"
+    validations:
+      required: true
+  - type: input
+    id: lab-title
+    attributes:
+      label: "Lab Title"
+      description: "Short title for your lab (40 chars max)"
+      placeholder: "Modernize .NET App with Aspire"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "Brief description of what the lab covers (140 chars max)"
+      placeholder: "Step-by-step guide to modernize legacy .NET apps..."
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: "Category"
+      options:
+        - Code Modernization
+        - Infra Modernization
+        - Data Modernization
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "My repository is public"
+          required: true
+        - label: "I have an APPMODLAB.MD file at the repo root"
+          required: true
+        - label: "Title is 40 characters or less"
+          required: true
+        - label: "Description is 140 characters or less"
+          required: true

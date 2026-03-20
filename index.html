@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Modernization Labs | 🎮 Level Up Your Apps</title>
+  <meta name="description" content="A retro 8-bit styled gallery showcasing Application Modernization Labs. Discover labs for code, infra, and data modernization on Azure.">
+  <meta property="og:title" content="App Modernization Labs | 🎮 Level Up Your Apps">
+  <meta property="og:description" content="Discover labs for code, infra, and data modernization on Azure with a retro 8-bit gaming aesthetic.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://emeaappgbb.github.io/AppModernizationLabs/">
+  <meta property="og:image" content="https://emeaappgbb.github.io/AppModernizationLabs/assets/og-image.png">
+  <base href="/AppModernizationLabs/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="dark">
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="logo-area">
+          <svg class="logo-svg" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-label="App Mod Labs Logo">
+            <rect x="4" y="4" width="8" height="8" fill="currentColor" opacity="0.8"/>
+            <rect x="16" y="4" width="8" height="8" fill="currentColor"/>
+            <rect x="28" y="4" width="8" height="8" fill="currentColor" opacity="0.6"/>
+            <rect x="4" y="16" width="8" height="8" fill="currentColor"/>
+            <rect x="16" y="16" width="8" height="8" fill="currentColor" opacity="0.9"/>
+            <rect x="28" y="16" width="8" height="8" fill="currentColor"/>
+            <rect x="4" y="28" width="8" height="8" fill="currentColor" opacity="0.6"/>
+            <rect x="16" y="28" width="8" height="8" fill="currentColor"/>
+            <rect x="28" y="28" width="8" height="8" fill="currentColor" opacity="0.8"/>
+          </svg>
+        </div>
+        <div class="header-titles">
+          <h1 class="site-title">APP MOD LABS</h1>
+          <p class="site-tagline">Level Up Your Apps 🎮</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn-icon theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <span class="theme-icon" aria-hidden="true">🌙</span>
+        </button>
+        <div class="dropdown" id="addDropdown">
+          <button class="btn-pixel dropdown-toggle" id="addDropdownToggle" aria-haspopup="true" aria-expanded="false">
+            + Add
+          </button>
+          <div class="dropdown-menu" id="addDropdownMenu" role="menu">
+            <a class="dropdown-item" href="https://github.com/EmeaAppGbb/AppModernizationLabs/issues/new?template=add-lab.yml" target="_blank" rel="noopener" role="menuitem">🎮 Add New Lab</a>
+            <a class="dropdown-item" href="https://github.com/EmeaAppGbb/AppModernizationLabs/issues/new?template=feedback.yml" target="_blank" rel="noopener" role="menuitem">💬 Add Feedback</a>
+            <a class="dropdown-item" href="https://github.com/EmeaAppGbb/AppModernizationLabs/issues/new?template=report-issue.yml" target="_blank" rel="noopener" role="menuitem">🐛 Report Issue</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== GALLERY SECTION ===== -->
+  <section class="gallery-section">
+    <div class="gallery-container">
+
+      <!-- Mobile filter toggle -->
+      <button class="mobile-filter-toggle btn-pixel" id="mobileFilterToggle" aria-label="Open filters">
+        ☰ Filters
+      </button>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h2 class="sidebar-title">Filters</h2>
+          <button class="btn-icon sidebar-close" id="sidebarClose" aria-label="Close filters">✕</button>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-group">
+          <label class="filter-label" for="searchInput">🔍 Search</label>
+          <input type="text" id="searchInput" class="search-box" placeholder="Search labs..." autocomplete="off">
+        </div>
+
+        <!-- Category -->
+        <div class="filter-group">
+          <label class="filter-label" for="categoryFilter">Category</label>
+          <select id="categoryFilter" class="filter-select">
+            <option value="">All Categories</option>
+            <option value="Code Modernization">Code Modernization</option>
+            <option value="Infra Modernization">Infra Modernization</option>
+            <option value="Data Modernization">Data Modernization</option>
+          </select>
+        </div>
+
+        <!-- Industry -->
+        <div class="filter-group">
+          <label class="filter-label" for="industryFilter">Industry</label>
+          <select id="industryFilter" class="filter-select">
+            <option value="">All Industries</option>
+            <option value="Cross-Industry">Cross-Industry</option>
+            <option value="Financial Services">Financial Services</option>
+            <option value="Healthcare & Life Sciences">Healthcare &amp; Life Sciences</option>
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Retail & Consumer Goods">Retail &amp; Consumer Goods</option>
+            <option value="Government & Public Sector">Government &amp; Public Sector</option>
+            <option value="Education">Education</option>
+            <option value="Energy & Resources">Energy &amp; Resources</option>
+            <option value="Telco & Media">Telco &amp; Media</option>
+            <option value="Mobility & Automotive">Mobility &amp; Automotive</option>
+          </select>
+        </div>
+
+        <!-- Dynamic checkbox groups -->
+        <div class="filter-group" id="servicesFilterGroup">
+          <label class="filter-label">Services</label>
+          <div class="filter-checkboxes" id="servicesFilters"></div>
+        </div>
+
+        <div class="filter-group" id="languagesFilterGroup">
+          <label class="filter-label">Languages</label>
+          <div class="filter-checkboxes" id="languagesFilters"></div>
+        </div>
+
+        <div class="filter-group" id="frameworksFilterGroup">
+          <label class="filter-label">Frameworks</label>
+          <div class="filter-checkboxes" id="frameworksFilters"></div>
+        </div>
+
+        <div class="filter-group" id="toolsFilterGroup">
+          <label class="filter-label">Modernization Tools</label>
+          <div class="filter-checkboxes" id="toolsFilters"></div>
+        </div>
+
+        <div class="filter-group" id="tagsFilterGroup">
+          <label class="filter-label">Tags</label>
+          <div class="filter-checkboxes" id="tagsFilters"></div>
+        </div>
+
+        <!-- Clear Filters -->
+        <button class="filter-clear-btn btn-pixel" id="clearFilters">✖ Clear All Filters</button>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="gallery-main">
+        <div class="gallery-toolbar">
+          <div class="sort-group">
+            <label for="sortSelect" class="sort-label">Sort:</label>
+            <select id="sortSelect" class="filter-select">
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </div>
+          <div class="results-count" id="resultsCount">0 labs found</div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- Cards rendered by JS -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display:none;">
+          <div class="no-results-icon">🕹️</div>
+          <h3>No Labs Found</h3>
+          <p>Try adjusting your filters or search terms.</p>
+          <p>INSERT COIN TO CONTINUE</p>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; Microsoft. Built with ❤️ and 🎮 using GitHub Copilot</p>
+      <a href="https://github.com/EmeaAppGbb/AppModernizationLabs" target="_blank" rel="noopener" class="footer-link">
+        GitHub Repo
+      </a>
+    </div>
+  </footer>
+
+  <!-- ===== VIDEO MODAL ===== -->
+  <div class="modal" id="videoModal" role="dialog" aria-modal="true" aria-label="Video player" style="display:none;">
+    <div class="modal-content">
+      <button class="btn-icon modal-close" id="modalClose" aria-label="Close video">✕</button>
+      <div class="modal-body">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen title="Lab video"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

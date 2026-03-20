@@ -1,0 +1,201 @@
+name: Process New Lab Issue
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  process-new-lab:
+    name: Process new lab submission
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'new-lab')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate and process lab submission
+        id: validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 << 'SCRIPT'
+          import json
+          import re
+          import sys
+          import urllib.request
+          import urllib.error
+          import base64
+          import yaml
+          import os
+
+          GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+          ISSUE_BODY = os.environ.get("ISSUE_BODY", "")
+          ISSUE_NUMBER = os.environ.get("ISSUE_NUMBER", "")
+
+          def github_api(url):
+              req = urllib.request.Request(url)
+              if GITHUB_TOKEN:
+                  req.add_header("Authorization", f"token {GITHUB_TOKEN}")
+              req.add_header("Accept", "application/vnd.github.v3+json")
+              with urllib.request.urlopen(req) as resp:
+                  return json.loads(resp.read().decode())
+
+          def parse_yaml_frontmatter(content):
+              match = re.match(r"^---\s*\n(.*?\n)---\s*\n?", content, re.DOTALL)
+              if not match:
+                  raise ValueError("No YAML frontmatter found in APPMODLAB.MD")
+              return yaml.safe_load(match.group(1))
+
+          def set_output(name, value):
+              with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                  if "\n" in str(value):
+                      import uuid
+                      delimiter = uuid.uuid4().hex
+                      f.write(f"{name}<<{delimiter}\n{value}\n{delimiter}\n")
+                  else:
+                      f.write(f"{name}={value}\n")
+
+          # Extract repo URL from issue body
+          url_pattern = r"https://github\.com/([^/\s]+)/([^/\s]+)"
+          match = re.search(url_pattern, ISSUE_BODY)
+
+          if not match:
+              set_output("valid", "false")
+              set_output("error", "No valid GitHub repository URL found in issue body. Expected format: `https://github.com/{owner}/{repo}`")
+              sys.exit(0)
+
+          owner = match.group(1)
+          repo = match.group(2).rstrip("/")
+          repo_url = f"https://github.com/{owner}/{repo}"
+
+          print(f"🔍 Validating {owner}/{repo}...")
+
+          # Check if already in labs.md
+          with open("labs.md", "r") as f:
+              existing = f.read()
+          if repo_url in existing:
+              set_output("valid", "false")
+              set_output("error", f"Repository `{repo_url}` is already listed in labs.md.")
+              sys.exit(0)
+
+          # Fetch APPMODLAB.MD
+          try:
+              api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/APPMODLAB.MD"
+              data = github_api(api_url)
+              content = base64.b64decode(data["content"]).decode("utf-8")
+          except urllib.error.HTTPError as e:
+              if e.code == 404:
+                  set_output("valid", "false")
+                  set_output("error", f"Repository `{owner}/{repo}` not found or does not contain an `APPMODLAB.MD` file.")
+              else:
+                  set_output("valid", "false")
+                  set_output("error", f"GitHub API error ({e.code}) while fetching APPMODLAB.MD from `{owner}/{repo}`.")
+              sys.exit(0)
+
+          # Parse YAML frontmatter
+          try:
+              metadata = parse_yaml_frontmatter(content)
+          except Exception as e:
+              set_output("valid", "false")
+              set_output("error", f"Invalid YAML frontmatter in APPMODLAB.MD: {e}")
+              sys.exit(0)
+
+          title = metadata.get("title", "(no title)")
+          description = metadata.get("description", "(no description)")
+          category = metadata.get("category", "(no category)")
+
+          set_output("valid", "true")
+          set_output("repo_url", repo_url)
+          set_output("owner", owner)
+          set_output("repo_name", repo)
+          set_output("lab_title", title)
+          set_output("lab_description", description)
+          set_output("lab_category", category)
+          print(f"✅ Valid lab: {title}")
+          SCRIPT
+
+      - name: Comment and close on validation failure
+        if: steps.validate.outputs.valid == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --body "❌ **Validation failed**
+
+          ${{ steps.validate.outputs.error }}
+
+          Please fix the issue and open a new submission."
+
+          gh issue close ${{ github.event.issue.number }} --reason "not planned"
+
+      - name: Create branch and update labs.md
+        if: steps.validate.outputs.valid == 'true'
+        run: |
+          BRANCH="add-lab/${{ github.event.issue.number }}-${{ steps.validate.outputs.repo_name }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+
+          echo "${{ steps.validate.outputs.repo_url }}" >> labs.md
+
+          git add labs.md
+          git commit -m "feat: add lab ${{ steps.validate.outputs.repo_name }}
+
+          Closes #${{ github.event.issue.number }}"
+          git push origin "$BRANCH"
+
+          echo "BRANCH=$BRANCH" >> "$GITHUB_ENV"
+
+      - name: Create pull request
+        if: steps.validate.outputs.valid == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL=$(gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Add lab: ${{ steps.validate.outputs.repo_name }}" \
+            --label "new-lab" \
+            --body "## New Lab Submission
+
+          | Field | Value |
+          |-------|-------|
+          | **Title** | ${{ steps.validate.outputs.lab_title }} |
+          | **Description** | ${{ steps.validate.outputs.lab_description }} |
+          | **Category** | ${{ steps.validate.outputs.lab_category }} |
+          | **Repository** | ${{ steps.validate.outputs.repo_url }} |
+
+          Closes #${{ github.event.issue.number }}
+
+          ---
+          _Automatically created from issue #${{ github.event.issue.number }}_")
+
+          echo "PR_URL=$PR_URL" >> "$GITHUB_ENV"
+
+      - name: Comment on issue with PR link
+        if: steps.validate.outputs.valid == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --body "✅ **Lab validated successfully!**
+
+          A pull request has been created: $PR_URL
+
+          Once merged, the lab will appear in the gallery after the next build."

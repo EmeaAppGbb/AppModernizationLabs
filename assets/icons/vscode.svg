@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- VS Code simplified pixel icon -->
+  <!-- Right sidebar -->
+  <rect x="11" y="1" width="4" height="14" fill="#2b7bd6"/>
+  <!-- Left angle bracket area -->
+  <rect x="1" y="3" width="2" height="2" fill="#4ba3f5"/>
+  <rect x="3" y="5" width="2" height="2" fill="#4ba3f5"/>
+  <rect x="5" y="7" width="2" height="2" fill="#4ba3f5"/>
+  <rect x="3" y="9" width="2" height="2" fill="#4ba3f5"/>
+  <rect x="1" y="11" width="2" height="2" fill="#4ba3f5"/>
+  <!-- Top diagonal -->
+  <rect x="7" y="3" width="4" height="2" fill="#4ba3f5"/>
+  <rect x="5" y="5" width="2" height="2" fill="#4ba3f5"/>
+  <!-- Bottom diagonal -->
+  <rect x="5" y="9" width="2" height="2" fill="#4ba3f5"/>
+  <rect x="7" y="11" width="4" height="2" fill="#4ba3f5"/>
+</svg>

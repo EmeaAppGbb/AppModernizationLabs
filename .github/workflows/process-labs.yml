@@ -1,0 +1,125 @@
+name: Process Labs
+
+on:
+  push:
+    branches: [main]
+    paths: [labs.md]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  process-labs:
+    name: Process lab repositories
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Process labs.md and build appmodlab.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 << 'SCRIPT'
+          import json
+          import re
+          import sys
+          import urllib.request
+          import urllib.error
+          import base64
+          import yaml
+          import os
+
+          GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+
+          def github_api(url):
+              """Fetch a GitHub API URL with auth."""
+              req = urllib.request.Request(url)
+              if GITHUB_TOKEN:
+                  req.add_header("Authorization", f"token {GITHUB_TOKEN}")
+              req.add_header("Accept", "application/vnd.github.v3+json")
+              with urllib.request.urlopen(req) as resp:
+                  return json.loads(resp.read().decode())
+
+          def parse_labs_md(path):
+              """Extract GitHub repo URLs from labs.md, skipping comments and blanks."""
+              urls = []
+              with open(path, "r") as f:
+                  for line in f:
+                      line = line.strip()
+                      if not line or line.startswith("#") or line.startswith("<!--"):
+                          continue
+                      match = re.match(r"https://github\.com/([^/]+)/([^/\s]+)", line)
+                      if match:
+                          urls.append((match.group(1), match.group(2), line))
+                      else:
+                          print(f"⚠️  Skipping invalid line: {line}")
+              return urls
+
+          def fetch_appmodlab(owner, repo):
+              """Fetch and parse APPMODLAB.MD from a GitHub repo."""
+              api_url = f"https://api.github.com/repos/{owner}/{repo}/contents/APPMODLAB.MD"
+              data = github_api(api_url)
+              content = base64.b64decode(data["content"]).decode("utf-8")
+              return content
+
+          def parse_yaml_frontmatter(content):
+              """Extract YAML frontmatter from markdown content."""
+              match = re.match(r"^---\s*\n(.*?\n)---\s*\n?", content, re.DOTALL)
+              if not match:
+                  raise ValueError("No YAML frontmatter found")
+              return yaml.safe_load(match.group(1))
+
+          # Main
+          repos = parse_labs_md("labs.md")
+          print(f"📋 Found {len(repos)} repo(s) in labs.md")
+
+          labs = []
+          for owner, repo, url in repos:
+              print(f"\n🔍 Processing {owner}/{repo}...")
+              try:
+                  raw = fetch_appmodlab(owner, repo)
+                  metadata = parse_yaml_frontmatter(raw)
+                  metadata["repoUrl"] = url.rstrip("/")
+                  metadata["repoOwner"] = owner
+                  metadata["repoName"] = repo
+                  labs.append(metadata)
+                  print(f"   ✅ {metadata.get('title', '(no title)')}")
+              except urllib.error.HTTPError as e:
+                  if e.code == 404:
+                      print(f"   ⚠️  Skipped — repo or APPMODLAB.MD not found (404)")
+                  else:
+                      print(f"   ⚠️  Skipped — HTTP error {e.code}")
+              except ValueError as e:
+                  print(f"   ⚠️  Skipped — {e}")
+              except Exception as e:
+                  print(f"   ⚠️  Skipped — unexpected error: {e}")
+
+          # Write output
+          with open("appmodlab.json", "w") as f:
+              json.dump(labs, f, indent=2, ensure_ascii=False)
+          print(f"\n📦 Wrote appmodlab.json with {len(labs)} lab(s)")
+          SCRIPT
+
+      - name: Commit appmodlab.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add appmodlab.json
+          if git diff --cached --quiet; then
+            echo "ℹ️  No changes to appmodlab.json"
+          else
+            git commit -m "chore: update appmodlab.json from labs.md"
+            git push
+            echo "✅ Committed and pushed appmodlab.json"
+          fi

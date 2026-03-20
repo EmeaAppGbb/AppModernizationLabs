@@ -1,0 +1,35 @@
+name: "🐛 Report Issue"
+description: "Report a bug or issue with the gallery or a specific lab template"
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: issue-area
+    attributes:
+      label: "Issue Area"
+      options:
+        - Gallery Website
+        - Specific Lab Template
+        - GitHub Actions / Automation
+        - Documentation
+    validations:
+      required: true
+  - type: input
+    id: lab-name
+    attributes:
+      label: "Lab Name (if applicable)"
+      description: "Which lab template has the issue?"
+      placeholder: "e.g., Modernize .NET App with Aspire"
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the Issue"
+      description: "What happened? What did you expect?"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "How can we reproduce the issue?"
+      placeholder: "1. Go to...\n2. Click on...\n3. See error..."

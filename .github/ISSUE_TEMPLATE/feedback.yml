@@ -1,0 +1,24 @@
+name: "💬 Feedback"
+description: "Share feedback about the App Modernization Labs gallery"
+title: "[Feedback]: "
+labels: ["feedback"]
+body:
+  - type: textarea
+    id: feedback
+    attributes:
+      label: "Your Feedback"
+      description: "Tell us what you think! Suggestions, ideas, or general feedback."
+      placeholder: "I love the retro design! It would be great if..."
+    validations:
+      required: true
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: "Feedback Type"
+      options:
+        - General
+        - Feature Request
+        - Content Suggestion
+        - Design/UX
+    validations:
+      required: true

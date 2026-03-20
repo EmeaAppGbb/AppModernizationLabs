@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges">
+  <!-- Terminal window frame -->
+  <rect x="2" y="3" width="20" height="18" fill="none" stroke="#00d4aa" stroke-width="1"/>
+  <rect x="2" y="3" width="20" height="4" fill="#00d4aa" opacity="0.3"/>
+  <!-- Window dots -->
+  <rect x="4" y="4" width="2" height="2" fill="#ff6b9d"/>
+  <rect x="7" y="4" width="2" height="2" fill="#ffd93d"/>
+  <rect x="10" y="4" width="2" height="2" fill="#00d4aa"/>
+  <!-- Code bracket < -->
+  <rect x="6" y="11" width="2" height="2" fill="#00d4aa"/>
+  <rect x="4" y="13" width="2" height="2" fill="#00d4aa"/>
+  <rect x="6" y="15" width="2" height="2" fill="#00d4aa"/>
+  <!-- Slash / -->
+  <rect x="10" y="15" width="2" height="2" fill="#ffd93d"/>
+  <rect x="11" y="13" width="2" height="2" fill="#ffd93d"/>
+  <rect x="12" y="11" width="2" height="2" fill="#ffd93d"/>
+  <!-- Code bracket > -->
+  <rect x="16" y="11" width="2" height="2" fill="#00d4aa"/>
+  <rect x="18" y="13" width="2" height="2" fill="#00d4aa"/>
+  <rect x="16" y="15" width="2" height="2" fill="#00d4aa"/>
+</svg>
