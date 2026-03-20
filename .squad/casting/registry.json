@@ -1,0 +1,61 @@
+{
+  "casting_version": "1.0",
+  "agents": [
+    {
+      "persistent_name": "Mikey",
+      "universe": "The Goonies",
+      "role": "Lead / Architect",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Data",
+      "universe": "The Goonies",
+      "role": "Frontend Dev",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Sloth",
+      "universe": "The Goonies",
+      "role": "Designer",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Andy",
+      "universe": "The Goonies",
+      "role": "Illustrator / Pixel Artist",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Chunk",
+      "universe": "The Goonies",
+      "role": "DevOps / CI-CD",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Mouth",
+      "universe": "The Goonies",
+      "role": "Content / Documentation",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Stef",
+      "universe": "The Goonies",
+      "role": "Tester / QA",
+      "created_at": "2026-03-20T00:05:00Z",
+      "legacy_named": false,
+      "status": "active"
+    }
+  ]
+}
