@@ -13,7 +13,7 @@
 - GitHub issue templates should guide users through submission requirements and surface the live gallery and template links prominently for easy navigation.
 - MIT license with 2026 copyright aligns with Microsoft open source standards. LICENSE file at repo root is standard practice.
 
-## Team Sync (2026-03-20)
+## Team Sync (2026-03-20, Session 1)
 
 **Documentation suite completion:**
 - README.md covers quick start, gallery navigation, lab submission workflow — directs users to issue templates and LABTemplate.md
@@ -22,3 +22,12 @@
 - CONTRIBUTING.md explains local setup, branch strategy, PR expectations — enables contributor onboarding without direct communication
 - All templates cross-reference each other and the live gallery — ensures community awareness and participation
 - Licensing clearly stated; README and LICENSE visible at repo root
+
+## Team Sync (2026-03-20, Session 2)
+
+**Modernization backlog & roadmap:**
+- `docs/BACKLOG.md` created with 20+ lab ideas across Code, Infra, Data modernization categories
+- Labs organized by priority level (High/Medium/Low) based on community interest
+- 10 community suggestions integrated; duplicates deduplicated
+- Backlog template aligns with APPMODLAB.MD metadata contract for future consistency
+- Roadmap provides direction for community contributions and demonstrates modernization scenario breadth
