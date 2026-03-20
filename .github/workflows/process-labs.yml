@@ -105,6 +105,11 @@ jobs:
               except Exception as e:
                   print(f"   ⚠️  Skipped — unexpected error: {e}")
 
+          # If no repos found in labs.md, preserve existing appmodlab.json (sample data)
+          if not repos:
+              print("\nℹ️  No repos in labs.md — preserving existing appmodlab.json")
+              sys.exit(0)
+
           # Write output
           with open("appmodlab.json", "w") as f:
               json.dump(labs, f, indent=2, ensure_ascii=False)
