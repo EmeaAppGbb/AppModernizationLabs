@@ -59,9 +59,9 @@ jobs:
                       line = line.strip()
                       if not line or line.startswith("#") or line.startswith("<!--"):
                           continue
-                      match = re.match(r"https://github\.com/([^/]+)/([^/\s]+)", line)
+                      match = re.search(r"https://github\.com/([^/]+)/([^/\s]+)", line)
                       if match:
-                          urls.append((match.group(1), match.group(2), line))
+                          urls.append((match.group(1), match.group(2), match.group(0)))
                       else:
                           print(f"⚠️  Skipping invalid line: {line}")
               return urls
