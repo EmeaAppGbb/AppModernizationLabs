@@ -39,11 +39,11 @@ jobs:
           find . -maxdepth 1 -not -name '.git' -not -name '.' -exec rm -rf {} +
 
           # Copy site files from main
-          cp main-src/index.html .
-          cp main-src/styles.css .
-          cp main-src/script.js .
-          cp main-src/appmodlab.json .
-          cp -r main-src/assets .
+          cp ../main-src/index.html .
+          cp ../main-src/styles.css .
+          cp ../main-src/script.js .
+          cp ../main-src/appmodlab.json .
+          cp -r ../main-src/assets .
 
           echo "📦 Pages branch contents:"
           ls -la
