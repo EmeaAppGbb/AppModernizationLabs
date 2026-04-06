@@ -1,0 +1,152 @@
+@page "/users"
+@using Dashboard.Services
+@using Dashboard.Models
+@inject AppInsightsService AppInsights
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>User Activity</PageTitle>
+
+<div class="dashboard-grid">
+    @if (isLoading)
+    {
+        <div class="retro-loading">
+            <div class="loading-spinner"></div>
+            <p>LOADING USER DATA...</p>
+        </div>
+    }
+    else
+    {
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-icon">🆕</div>
+                <div class="stat-value">@(summary?.TotalNewUsers.ToString("N0") ?? "0")</div>
+                <div class="stat-label">NEW USERS</div>
+            </div>
+            <div class="stat-card stat-card-secondary">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-value">@(summary?.TotalReturningUsers.ToString("N0") ?? "0")</div>
+                <div class="stat-label">RETURNING</div>
+            </div>
+            <div class="stat-card stat-card-accent">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">@FormatDuration(summary?.OverallAvgSessionDuration ?? 0)</div>
+                <div class="stat-label">AVG SESSION</div>
+            </div>
+            <div class="stat-card stat-card-success">
+                <div class="stat-icon">🎨</div>
+                <div class="stat-value">@ThemeRatio()</div>
+                <div class="stat-label">DARK / LIGHT</div>
+            </div>
+        </div>
+
+        <!-- Sessions Over Time -->
+        <div class="retro-card retro-card-wide">
+            <h3 class="card-title">📈 USER SESSIONS OVER TIME</h3>
+            <div class="chart-container">
+                <canvas id="sessionsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- New vs Returning -->
+        <div class="retro-card">
+            <h3 class="card-title">👥 NEW vs RETURNING VISITORS</h3>
+            <div class="chart-container">
+                <canvas id="newVsReturningChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Theme Preference -->
+        <div class="retro-card">
+            <h3 class="card-title">🎨 THEME PREFERENCE</h3>
+            <div class="chart-container">
+                <canvas id="themeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Search Queries -->
+        <div class="retro-card">
+            <h3 class="card-title">🔍 TOP SEARCH QUERIES</h3>
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>QUERY</th>
+                            <th>COUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (summary?.TopSearchQueries.Any() == true)
+                        {
+                            @foreach (var (q, idx) in summary.TopSearchQueries.Take(20).Select((q, i) => (q, i)))
+                            {
+                                <tr>
+                                    <td class="rank-cell">@(idx + 1)</td>
+                                    <td>@q.Query</td>
+                                    <td class="number-cell">@q.Count</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="empty-cell">No search data available</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private UserActivitySummary? summary;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            summary = await AppInsights.GetUserActivityAsync();
+        }
+        catch { }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || summary is null) return;
+
+        var labels = summary.SessionsOverTime.Select(s => s.Timestamp.ToString("MMM dd")).ToArray();
+        var sessions = summary.SessionsOverTime.Select(s => s.SessionCount).ToArray();
+        await JS.InvokeVoidAsync("RetroCharts.createLineChart", "sessionsChart", labels, sessions, "Sessions");
+
+        await JS.InvokeVoidAsync("RetroCharts.createDoughnutChart", "newVsReturningChart",
+            new[] { "New Users", "Returning Users" },
+            new[] { summary.TotalNewUsers, summary.TotalReturningUsers },
+            "User Type");
+
+        await JS.InvokeVoidAsync("RetroCharts.createDoughnutChart", "themeChart",
+            new[] { "Dark Theme", "Light Theme" },
+            new[] { summary.DarkThemeUsers, summary.LightThemeUsers },
+            "Theme Split");
+    }
+
+    private static string FormatDuration(double seconds) => seconds switch
+    {
+        >= 3600 => $"{seconds / 3600:F1}h",
+        >= 60 => $"{seconds / 60:F0}m",
+        _ => $"{seconds:F0}s"
+    };
+
+    private string ThemeRatio()
+    {
+        var dark = summary?.DarkThemeUsers ?? 0;
+        var light = summary?.LightThemeUsers ?? 0;
+        return $"{dark}/{light}";
+    }
+}

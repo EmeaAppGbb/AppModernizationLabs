@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+
+<div class="retro-app">
+    <NavMenu />
+    <main class="retro-main">
+        <header class="retro-topbar">
+            <button class="retro-btn retro-btn-icon mobile-menu-toggle" @onclick="ToggleSidebar">☰</button>
+            <h2 class="topbar-title">@GetPageTitle()</h2>
+            <button class="retro-btn retro-btn-sm theme-toggle" @onclick="ToggleTheme" title="Toggle Theme">
+                @(isDark ? "☀️" : "🌙")
+            </button>
+        </header>
+        <div class="retro-content">
+            @Body
+        </div>
+    </main>
+</div>
+
+@code {
+    private bool isDark = true;
+    private bool sidebarOpen = false;
+
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private void ToggleTheme()
+    {
+        isDark = !isDark;
+    }
+
+    private void ToggleSidebar()
+    {
+        sidebarOpen = !sidebarOpen;
+    }
+
+    private string GetPageTitle()
+    {
+        var uri = Navigation.ToBaseRelativePath(Navigation.Uri);
+        return uri switch
+        {
+            "" => "DASHBOARD OVERVIEW",
+            "pageviews" => "PAGE VIEWS",
+            "engagement" => "LAB ENGAGEMENT",
+            "users" => "USER ACTIVITY",
+            "videos" => "VIDEO METRICS",
+            "shares" => "SHARE METRICS",
+            _ => "DASHBOARD"
+        };
+    }
+}

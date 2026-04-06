@@ -1,0 +1,163 @@
+@page "/engagement"
+@using Dashboard.Services
+@using Dashboard.Models
+@inject AppInsightsService AppInsights
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Lab Engagement</PageTitle>
+
+<div class="dashboard-grid">
+    @if (isLoading)
+    {
+        <div class="retro-loading">
+            <div class="loading-spinner"></div>
+            <p>LOADING ENGAGEMENT DATA...</p>
+        </div>
+    }
+    else
+    {
+        <!-- Action Summary Stats -->
+        <div class="stats-row">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-icon">📋</div>
+                <div class="stat-value">@(summary?.TotalCloneClicks.ToString("N0") ?? "0")</div>
+                <div class="stat-label">CLONE CLICKS</div>
+            </div>
+            <div class="stat-card stat-card-secondary">
+                <div class="stat-icon">💻</div>
+                <div class="stat-value">@(summary?.TotalVsCodeClicks.ToString("N0") ?? "0")</div>
+                <div class="stat-label">VS CODE OPENS</div>
+            </div>
+            <div class="stat-card stat-card-accent">
+                <div class="stat-icon">☁️</div>
+                <div class="stat-value">@(summary?.TotalCodespaceClicks.ToString("N0") ?? "0")</div>
+                <div class="stat-label">CODESPACE OPENS</div>
+            </div>
+            <div class="stat-card stat-card-success">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">@(summary?.TotalStarClicks.ToString("N0") ?? "0")</div>
+                <div class="stat-label">STAR CLICKS</div>
+            </div>
+        </div>
+
+        <!-- Most Clicked Labs Chart -->
+        <div class="retro-card retro-card-wide">
+            <h3 class="card-title">🏆 MOST CLICKED LABS</h3>
+            <div class="chart-container">
+                <canvas id="topLabsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Clone vs VS Code vs Codespace -->
+        <div class="retro-card">
+            <h3 class="card-title">🔀 ACTION BREAKDOWN</h3>
+            <div class="chart-container">
+                <canvas id="actionBreakdownChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Lab Details Table -->
+        <div class="retro-card">
+            <h3 class="card-title">📊 LAB ENGAGEMENT DETAILS</h3>
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>LAB</th>
+                            <th>CLICKS</th>
+                            <th>CLONE</th>
+                            <th>VSCODE</th>
+                            <th>SPACE</th>
+                            <th>⭐</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (summary?.TopLabs.Any() == true)
+                        {
+                            @foreach (var lab in summary.TopLabs)
+                            {
+                                <tr>
+                                    <td>@lab.LabName</td>
+                                    <td class="number-cell">@lab.ClickCount</td>
+                                    <td class="number-cell">@lab.CloneClicks</td>
+                                    <td class="number-cell">@lab.VsCodeClicks</td>
+                                    <td class="number-cell">@lab.CodespaceClicks</td>
+                                    <td class="number-cell">@lab.StarClicks</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="6" class="empty-cell">No data available</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Filter Usage -->
+        <div class="retro-card">
+            <h3 class="card-title">🔍 FILTER USAGE PATTERNS</h3>
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>FILTER</th>
+                            <th>VALUE</th>
+                            <th>COUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (summary?.FilterUsagePatterns.Any() == true)
+                        {
+                            @foreach (var f in summary.FilterUsagePatterns.Take(15))
+                            {
+                                <tr>
+                                    <td>@f.FilterName</td>
+                                    <td>@f.FilterValue</td>
+                                    <td class="number-cell">@f.UsageCount</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="empty-cell">No data available</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private LabEngagementSummary? summary;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            summary = await AppInsights.GetLabEngagementAsync();
+        }
+        catch { }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || summary is null) return;
+
+        var labNames = summary.TopLabs.Take(10).Select(l => l.LabName).ToArray();
+        var clicks = summary.TopLabs.Take(10).Select(l => l.ClickCount).ToArray();
+        await JS.InvokeVoidAsync("RetroCharts.createBarChart", "topLabsChart", labNames, clicks, "Total Clicks");
+
+        var actionLabels = new[] { "Clone", "VS Code", "Codespace", "Stars" };
+        var actionData = new[] { summary.TotalCloneClicks, summary.TotalVsCodeClicks, summary.TotalCodespaceClicks, summary.TotalStarClicks };
+        await JS.InvokeVoidAsync("RetroCharts.createDoughnutChart", "actionBreakdownChart", actionLabels, actionData, "Action Distribution");
+    }
+}

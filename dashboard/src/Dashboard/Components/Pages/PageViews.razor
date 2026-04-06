@@ -1,0 +1,112 @@
+@page "/pageviews"
+@using Dashboard.Services
+@using Dashboard.Models
+@inject AppInsightsService AppInsights
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Page Views</PageTitle>
+
+<div class="dashboard-grid">
+    @if (isLoading)
+    {
+        <div class="retro-loading">
+            <div class="loading-spinner"></div>
+            <p>LOADING PAGE VIEW DATA...</p>
+        </div>
+    }
+    else
+    {
+        <!-- Views Over Time Chart -->
+        <div class="retro-card retro-card-wide">
+            <h3 class="card-title">📈 PAGE VIEWS OVER TIME (30 DAYS)</h3>
+            <div class="chart-container">
+                <canvas id="pageViewsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Views By Page -->
+        <div class="retro-card">
+            <h3 class="card-title">📄 VIEWS BY PAGE</h3>
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>PAGE</th>
+                            <th>VIEWS</th>
+                            <th>UNIQUE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (summary?.TopPages.Any() == true)
+                        {
+                            @foreach (var pv in summary.TopPages)
+                            {
+                                <tr>
+                                    <td>@pv.PageName</td>
+                                    <td class="number-cell">@pv.ViewCount.ToString("N0")</td>
+                                    <td class="number-cell">@pv.UniqueUsers.ToString("N0")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="empty-cell">No data available</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Geographic Distribution -->
+        <div class="retro-card">
+            <h3 class="card-title">🌍 GEOGRAPHIC DISTRIBUTION</h3>
+            <div class="chart-container">
+                <canvas id="geoChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Device / Browser Breakdown -->
+        <div class="retro-card">
+            <h3 class="card-title">💻 DEVICE / BROWSER BREAKDOWN</h3>
+            <div class="chart-container">
+                <canvas id="deviceChart"></canvas>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private PageViewSummary? summary;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            summary = await AppInsights.GetPageViewSummaryAsync();
+        }
+        catch { /* Error handled by empty state */ }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || summary is null) return;
+
+        var labels = summary.ViewsOverTime.Select(v => v.Timestamp.ToString("MMM dd")).ToArray();
+        var data = summary.ViewsOverTime.Select(v => v.ViewCount).ToArray();
+        await JS.InvokeVoidAsync("RetroCharts.createLineChart", "pageViewsChart", labels, data, "Page Views");
+
+        var geoLabels = summary.GeographicDistribution.Select(g => g.Country).ToArray();
+        var geoData = summary.GeographicDistribution.Select(g => g.Count).ToArray();
+        await JS.InvokeVoidAsync("RetroCharts.createBarChart", "geoChart", geoLabels, geoData, "Visits by Country");
+
+        var devLabels = summary.DeviceBreakdown.Select(d => d.Name).ToArray();
+        var devData = summary.DeviceBreakdown.Select(d => d.Count).ToArray();
+        await JS.InvokeVoidAsync("RetroCharts.createDoughnutChart", "deviceChart", devLabels, devData, "Browser Share");
+    }
+}

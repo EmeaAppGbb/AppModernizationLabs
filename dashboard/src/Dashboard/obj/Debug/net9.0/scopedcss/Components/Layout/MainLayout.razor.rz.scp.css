@@ -1,0 +1,52 @@
+[b-z85ujsqdpl] .retro-app {
+    display: flex;
+    min-height: 100vh;
+}
+
+[b-z85ujsqdpl] .retro-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-left: 260px;
+}
+
+[b-z85ujsqdpl] .retro-topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 3px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+[b-z85ujsqdpl] .topbar-title {
+    flex: 1;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    color: var(--primary);
+    letter-spacing: 2px;
+}
+
+[b-z85ujsqdpl] .retro-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+[b-z85ujsqdpl] .mobile-menu-toggle {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    [b-z85ujsqdpl] .retro-main {
+        margin-left: 0;
+    }
+
+    [b-z85ujsqdpl] .mobile-menu-toggle {
+        display: block;
+    }
+}

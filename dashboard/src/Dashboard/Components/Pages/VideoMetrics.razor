@@ -1,0 +1,171 @@
+@page "/videos"
+@using Dashboard.Services
+@using Dashboard.Models
+@inject AppInsightsService AppInsights
+@inject YouTubeAnalyticsService YouTube
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Video Metrics</PageTitle>
+
+<div class="dashboard-grid">
+    @if (isLoading)
+    {
+        <div class="retro-loading">
+            <div class="loading-spinner"></div>
+            <p>LOADING VIDEO DATA...</p>
+        </div>
+    }
+    else
+    {
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-icon">▶️</div>
+                <div class="stat-value">@(summary?.TotalPlays.ToString("N0") ?? "0")</div>
+                <div class="stat-label">TOTAL PLAYS</div>
+            </div>
+            <div class="stat-card stat-card-secondary">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">@(summary?.TotalCompletes.ToString("N0") ?? "0")</div>
+                <div class="stat-label">COMPLETIONS</div>
+            </div>
+            <div class="stat-card stat-card-accent">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">@FormatDuration(summary?.OverallAvgWatchTime ?? 0)</div>
+                <div class="stat-label">AVG WATCH TIME</div>
+            </div>
+            <div class="stat-card stat-card-success">
+                <div class="stat-icon">📺</div>
+                <div class="stat-value">@(summary?.VideosByLab.Count.ToString() ?? "0")</div>
+                <div class="stat-label">VIDEOS TRACKED</div>
+            </div>
+        </div>
+
+        <!-- Most Watched Chart -->
+        <div class="retro-card retro-card-wide">
+            <h3 class="card-title">🏆 MOST WATCHED VIDEOS</h3>
+            <div class="chart-container">
+                <canvas id="mostWatchedChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Videos By Lab Table -->
+        <div class="retro-card retro-card-wide">
+            <h3 class="card-title">📊 VIDEO EVENTS BY LAB</h3>
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>LAB</th>
+                            <th>VIDEO</th>
+                            <th>▶️ PLAY</th>
+                            <th>⏸️ PAUSE</th>
+                            <th>✅ DONE</th>
+                            <th>AVG TIME</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (summary?.VideosByLab.Any() == true)
+                        {
+                            @foreach (var v in summary.VideosByLab)
+                            {
+                                <tr>
+                                    <td>@v.LabName</td>
+                                    <td>@(string.IsNullOrEmpty(v.VideoTitle) ? v.VideoId : v.VideoTitle)</td>
+                                    <td class="number-cell">@v.PlayCount</td>
+                                    <td class="number-cell">@v.PauseCount</td>
+                                    <td class="number-cell">@v.CompleteCount</td>
+                                    <td class="number-cell">@FormatDuration(v.AvgWatchTimeSeconds)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="6" class="empty-cell">No video data available</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- YouTube Stats (if configured) -->
+        @if (YouTube.IsConfigured && youtubeStats.Any())
+        {
+            <div class="retro-card retro-card-wide">
+                <h3 class="card-title">📺 YOUTUBE CHANNEL STATS</h3>
+                <div class="retro-table-wrap">
+                    <table class="retro-table">
+                        <thead>
+                            <tr>
+                                <th>VIDEO</th>
+                                <th>VIEWS</th>
+                                <th>LIKES</th>
+                                <th>COMMENTS</th>
+                                <th>DURATION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var yt in youtubeStats)
+                            {
+                                <tr>
+                                    <td>@yt.Title</td>
+                                    <td class="number-cell">@yt.ViewCount.ToString("N0")</td>
+                                    <td class="number-cell">@yt.LikeCount.ToString("N0")</td>
+                                    <td class="number-cell">@yt.CommentCount.ToString("N0")</td>
+                                    <td>@yt.Duration</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else if (!YouTube.IsConfigured)
+        {
+            <div class="retro-card retro-card-info">
+                <p>💡 YouTube API not configured. Add <code>YouTube:ApiKey</code> in appsettings.json for YouTube embed analytics.</p>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private VideoMetricSummary? summary;
+    private List<YouTubeVideoStats> youtubeStats = [];
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var videoTask = AppInsights.GetVideoMetricsAsync();
+            var ytTask = YouTube.GetChannelVideosAsync();
+            await Task.WhenAll(videoTask, ytTask);
+
+            summary = videoTask.Result;
+            youtubeStats = ytTask.Result;
+        }
+        catch { }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || summary is null) return;
+
+        var labels = summary.MostWatched.Select(v => string.IsNullOrEmpty(v.VideoTitle) ? v.VideoId : v.VideoTitle).ToArray();
+        var data = summary.MostWatched.Select(v => v.PlayCount).ToArray();
+        await JS.InvokeVoidAsync("RetroCharts.createBarChart", "mostWatchedChart", labels, data, "Play Count");
+    }
+
+    private static string FormatDuration(double seconds) => seconds switch
+    {
+        >= 3600 => $"{seconds / 3600:F1}h",
+        >= 60 => $"{seconds / 60:F0}m",
+        _ => $"{seconds:F0}s"
+    };
+}

@@ -1,0 +1,157 @@
+﻿@page "/"
+@using Dashboard.Services
+@using Dashboard.Models
+@inject AppInsightsService AppInsights
+@rendermode InteractiveServer
+
+<PageTitle>Dashboard Overview</PageTitle>
+
+<div class="dashboard-grid">
+    @if (isLoading)
+    {
+        <div class="retro-loading">
+            <div class="loading-spinner"></div>
+            <p>LOADING TELEMETRY DATA...</p>
+        </div>
+    }
+    else if (error is not null)
+    {
+        <div class="retro-card retro-card-error">
+            <h3>⚠️ ERROR</h3>
+            <p>@error</p>
+            <button class="retro-btn" @onclick="LoadData">RETRY</button>
+        </div>
+    }
+    else
+    {
+        <!-- Quick Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-icon">👁️</div>
+                <div class="stat-value">@FormatNumber(summary?.TotalViewsToday ?? 0)</div>
+                <div class="stat-label">VIEWS TODAY</div>
+            </div>
+            <div class="stat-card stat-card-secondary">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value">@FormatNumber(summary?.TotalViews7Days ?? 0)</div>
+                <div class="stat-label">VIEWS 7 DAYS</div>
+            </div>
+            <div class="stat-card stat-card-accent">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">@FormatNumber(summary?.TotalViews30Days ?? 0)</div>
+                <div class="stat-label">VIEWS 30 DAYS</div>
+            </div>
+            <div class="stat-card stat-card-success">
+                <div class="stat-icon">👤</div>
+                <div class="stat-value">@FormatNumber(summary?.TotalUniqueUsers ?? 0)</div>
+                <div class="stat-label">UNIQUE USERS</div>
+            </div>
+        </div>
+
+        <!-- Top Labs -->
+        <div class="retro-card">
+            <h3 class="card-title">🏆 TOP 5 MOST VISITED LABS</h3>
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>LAB</th>
+                            <th>VIEWS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (summary?.TopPages.Any() == true)
+                        {
+                            @foreach (var (pv, idx) in summary.TopPages.Take(5).Select((p, i) => (p, i)))
+                            {
+                                <tr>
+                                    <td class="rank-cell">@(idx + 1)</td>
+                                    <td>@pv.PageName</td>
+                                    <td class="number-cell">@FormatNumber(pv.ViewCount)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="empty-cell">No data available — configure App Insights</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Engagement Quick Summary -->
+        <div class="retro-card">
+            <h3 class="card-title">🎮 ENGAGEMENT SNAPSHOT</h3>
+            <div class="engagement-grid">
+                <div class="engagement-item">
+                    <span class="engagement-value">@FormatNumber(engagement?.TotalCloneClicks ?? 0)</span>
+                    <span class="engagement-label">Clone</span>
+                </div>
+                <div class="engagement-item">
+                    <span class="engagement-value">@FormatNumber(engagement?.TotalVsCodeClicks ?? 0)</span>
+                    <span class="engagement-label">VS Code</span>
+                </div>
+                <div class="engagement-item">
+                    <span class="engagement-value">@FormatNumber(engagement?.TotalCodespaceClicks ?? 0)</span>
+                    <span class="engagement-label">Codespace</span>
+                </div>
+                <div class="engagement-item">
+                    <span class="engagement-value">@FormatNumber(engagement?.TotalStarClicks ?? 0)</span>
+                    <span class="engagement-label">Stars</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Users -->
+        <div class="retro-card">
+            <h3 class="card-title">⚡ ACTIVE NOW</h3>
+            <div class="active-users-display">
+                <span class="active-count">@(summary?.ActiveUsersNow ?? 0)</span>
+                <span class="active-label">users online</span>
+                <div class="active-pulse"></div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private PageViewSummary? summary;
+    private LabEngagementSummary? engagement;
+    private bool isLoading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        isLoading = true;
+        error = null;
+        StateHasChanged();
+
+        try
+        {
+            summary = await AppInsights.GetPageViewSummaryAsync();
+            engagement = await AppInsights.GetLabEngagementAsync();
+        }
+        catch (Exception ex)
+        {
+            error = $"Failed to load dashboard data: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private static string FormatNumber(long value) => value switch
+    {
+        >= 1_000_000 => $"{value / 1_000_000.0:F1}M",
+        >= 1_000 => $"{value / 1_000.0:F1}K",
+        _ => value.ToString("N0")
+    };
+}
