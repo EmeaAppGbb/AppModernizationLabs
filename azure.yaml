@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: appmodlabs-dashboard
+metadata:
+  template: appmodlabs-dashboard@0.0.1
+services:
+  dashboard:
+    project: ./dashboard/src/Dashboard
+    host: containerapp
+    language: dotnet
+    docker:
+      path: ./dashboard/Dockerfile
+      context: ./dashboard/src/Dashboard

@@ -1,0 +1,88 @@
+name: Deploy Dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard/**'
+      - 'infra/**'
+      - 'azure.yaml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME || 'appmodlabs' }}
+  AZURE_LOCATION: ${{ vars.AZURE_LOCATION || 'eastus2' }}
+
+jobs:
+  deploy:
+    name: Provision & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Install Azure Developer CLI
+        uses: Azure/setup-azd@v2
+
+      - name: Provision infrastructure
+        run: |
+          azd auth login --client-id "${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}" \
+                         --client-secret "${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}" \
+                         --tenant-id "${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}"
+          azd provision --no-prompt
+        env:
+          AZURE_ENV_NAME: ${{ env.AZURE_ENV_NAME }}
+          AZURE_LOCATION: ${{ env.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+
+      - name: Get ACR login server
+        id: acr
+        run: |
+          ACR_ENDPOINT=$(azd env get-value AZURE_CONTAINER_REGISTRY_ENDPOINT 2>/dev/null || echo "")
+          echo "login_server=${ACR_ENDPOINT}" >> "$GITHUB_OUTPUT"
+        env:
+          AZURE_ENV_NAME: ${{ env.AZURE_ENV_NAME }}
+
+      - name: Login to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ steps.acr.outputs.login_server }}
+          username: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+          password: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE="${{ steps.acr.outputs.login_server }}/dashboard:${{ github.sha }}"
+          IMAGE_LATEST="${{ steps.acr.outputs.login_server }}/dashboard:latest"
+          docker build -t "$IMAGE" -t "$IMAGE_LATEST" -f ./dashboard/Dockerfile ./dashboard/src/Dashboard
+          docker push "$IMAGE"
+          docker push "$IMAGE_LATEST"
+
+      - name: Deploy with azd
+        run: |
+          azd deploy --no-prompt
+        env:
+          AZURE_ENV_NAME: ${{ env.AZURE_ENV_NAME }}
+          AZURE_LOCATION: ${{ env.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+
+      - name: Show deployment outputs
+        run: |
+          echo "## Deployment Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          DASHBOARD_URL=$(azd env get-value DASHBOARD_URL 2>/dev/null || echo "N/A")
+          ACR_ENDPOINT=$(azd env get-value AZURE_CONTAINER_REGISTRY_ENDPOINT 2>/dev/null || echo "N/A")
+          echo "- **Dashboard URL:** ${DASHBOARD_URL}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **ACR Endpoint:** ${ACR_ENDPOINT}" >> "$GITHUB_STEP_SUMMARY"
+        env:
+          AZURE_ENV_NAME: ${{ env.AZURE_ENV_NAME }}
