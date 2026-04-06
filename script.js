@@ -1,5 +1,5 @@
 /* ============================================================
-   script.js — App Modernization Labs Gallery
+   script.js — Agentic Application Enablement Labs Gallery
    Handles data loading, filtering, sorting, rendering, and UI
    ============================================================ */
 
@@ -242,19 +242,22 @@
       )
       .join('');
 
-    const videoBtn = lab.video
-      ? `<button class="action-btn btn-pixel video-btn" data-video="${escapeAttr(lab.video)}" title="Watch video">🎬</button>`
-      : '';
-
     const cloneCmd = `git clone ${lab.repoUrl || '#'}.git`;
     const vsCodeUrl = `vscode://vscode.git/clone?url=${encodeURIComponent(lab.repoUrl || '')}`;
     const codespaceUrl = `https://github.com/codespaces/new?repo=${encodeURIComponent((lab.repoOwner || '') + '/' + (lab.repoName || ''))}`;
 
+    const videoItem = lab.video
+      ? `<button class="dropdown-item video-btn" data-video="${escapeAttr(lab.video)}" role="menuitem">🎬 Watch Demo Video</button>`
+      : '';
+
+    const shareUrl = lab.repoUrl || window.location.href;
+    const shareTitle = lab.title || 'Agentic Lab';
+
     return `
-    <article class="lab-card" data-title="${escapeAttr(lab.title)}">
+    <article class="lab-card" data-title="${escapeAttr(lab.title)}" data-category="${escapeAttr(lab.category || '')}">
       ${thumbnailMarkup}
       <div class="lab-card-body">
-        <h3 class="lab-card-title">${escapeHTML(lab.title)}</h3>
+        <h3 class="lab-card-title"><a href="${escapeAttr(lab.repoUrl || '#')}" target="_blank" rel="noopener">${escapeHTML(lab.title)}</a></h3>
         <p class="lab-card-description">${escapeHTML(truncate(lab.description, 140))}</p>
         <div class="lab-card-tags">
           <span class="badge badge-category badge-${categoryClass}">${escapeHTML(lab.category || 'Uncategorized')}</span>
@@ -266,14 +269,17 @@
       <div class="lab-card-footer">
         <div class="lab-card-actions">
           <a class="action-btn btn-pixel" href="${lab.repoUrl ? lab.repoUrl + '/stargazers' : '#'}" target="_blank" rel="noopener" title="Star on GitHub">⭐</a>
-          ${videoBtn}
           <a class="action-btn btn-pixel" href="${escapeAttr(lab.repoUrl || '#')}" target="_blank" rel="noopener" title="View on GitHub">👁️ GitHub</a>
+          <button class="action-btn btn-pixel share-btn" data-share-url="${escapeAttr(shareUrl)}" data-share-title="${escapeAttr(shareTitle)}" title="Share this lab">🔗 Share</button>
+        </div>
+        <div class="lab-card-actions-right">
           <div class="dropdown start-lab-dropdown">
             <button class="action-btn btn-primary btn-pixel start-lab-toggle" aria-haspopup="true" aria-expanded="false">🚀 Start</button>
             <div class="dropdown-menu start-lab-menu" role="menu">
-              <button class="dropdown-item copy-clone" data-clone="${escapeAttr(cloneCmd)}" role="menuitem">📋 Clone</button>
               <a class="dropdown-item" href="${vsCodeUrl}" role="menuitem">💻 Open in VS Code</a>
+              <button class="dropdown-item copy-clone" data-clone="${escapeAttr(cloneCmd)}" role="menuitem">📋 Clone Repository</button>
               <a class="dropdown-item" href="${codespaceUrl}" target="_blank" rel="noopener" role="menuitem">☁️ Open in Codespace</a>
+              ${videoItem}
             </div>
           </div>
         </div>
@@ -305,6 +311,7 @@
     document.body.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
     updateThemeIcon(next);
+    if (window.telemetry) window.telemetry.trackEvent('ThemeToggle', { theme: next });
   }
 
   function updateThemeIcon(theme) {
@@ -333,6 +340,11 @@
     const menu = btn.nextElementSibling;
     const open = menu.classList.toggle('open');
     btn.setAttribute('aria-expanded', open);
+    if (open && window.telemetry) {
+      const card = btn.closest('.lab-card');
+      const title = card ? card.getAttribute('data-title') : '';
+      window.telemetry.trackEvent('StartMenuOpen', { labTitle: title });
+    }
   }
 
   // ── Copy to Clipboard ─────────────────────────────────────
@@ -342,6 +354,7 @@
     e.preventDefault();
 
     const cmd = btn.getAttribute('data-clone');
+    if (window.telemetry) window.telemetry.trackEvent('CloneClick', { repoUrl: cmd });
     navigator.clipboard.writeText(cmd).then(
       () => {
         const orig = btn.textContent;
@@ -361,6 +374,43 @@
         setTimeout(() => (btn.textContent = orig), 2000);
       }
     );
+  }
+
+  // ── Share Handler ───────────────────────────────────────────
+  function handleShare(e) {
+    const btn = e.target.closest('.share-btn');
+    if (!btn) return;
+    e.preventDefault();
+
+    const url = btn.getAttribute('data-share-url');
+    const title = btn.getAttribute('data-share-title');
+
+    const shareMethod = navigator.share ? 'webshare' : 'clipboard';
+    if (window.telemetry) window.telemetry.trackEvent('ShareClick', { labTitle: title, shareMethod: shareMethod });
+
+    if (navigator.share) {
+      navigator.share({ title, url }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(url).then(
+        () => {
+          const orig = btn.innerHTML;
+          btn.innerHTML = '✅ Link Copied!';
+          setTimeout(() => (btn.innerHTML = orig), 2000);
+        },
+        () => {
+          // Fallback for older browsers
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          const orig = btn.innerHTML;
+          btn.innerHTML = '✅ Link Copied!';
+          setTimeout(() => (btn.innerHTML = orig), 2000);
+        }
+      );
+    }
   }
 
   // ── Video Modal ────────────────────────────────────────────
@@ -419,16 +469,32 @@
 
   // ── Event Binding ──────────────────────────────────────────
   function bindEvents() {
-    // Filters
-    searchInput.addEventListener('input', debounce(applyFilters, 250));
-    categoryFilter.addEventListener('change', applyFilters);
-    industryFilter.addEventListener('change', applyFilters);
+    // Filters — with telemetry
+    searchInput.addEventListener('input', debounce(function () {
+      applyFilters();
+      if (window.telemetry && searchInput.value.trim()) {
+        window.telemetry.trackEvent('Search', { query: searchInput.value.trim() });
+      }
+    }, 250));
+    categoryFilter.addEventListener('change', function () {
+      applyFilters();
+      if (window.telemetry) window.telemetry.trackEvent('FilterChange', { filterType: 'category', value: categoryFilter.value });
+    });
+    industryFilter.addEventListener('change', function () {
+      applyFilters();
+      if (window.telemetry) window.telemetry.trackEvent('FilterChange', { filterType: 'industry', value: industryFilter.value });
+    });
     sortSelect.addEventListener('change', applyFilters);
     clearFiltersBtn.addEventListener('click', clearAllFilters);
 
     // Dynamic checkbox filters — delegate
-    Object.values(checkboxContainers).forEach((container) => {
-      container.addEventListener('change', applyFilters);
+    Object.entries(checkboxContainers).forEach(function ([key, container]) {
+      container.addEventListener('change', function (e) {
+        applyFilters();
+        if (window.telemetry && e.target.type === 'checkbox') {
+          window.telemetry.trackEvent('FilterChange', { filterType: key, value: e.target.value });
+        }
+      });
     });
 
     // Theme
@@ -437,15 +503,45 @@
     // Add dropdown
     addDropdownToggle.addEventListener('click', toggleAddDropdown);
 
-    // Start Lab dropdown + copy — delegate from grid
+    // Start Lab dropdown + copy + share + video — delegate from grid
     galleryGrid.addEventListener('click', (e) => {
       handleStartLabToggle(e);
       handleCopyClone(e);
+      handleShare(e);
 
-      // Video button
+      // Video button (in dropdown or standalone)
       const videoBtn = e.target.closest('.video-btn');
       if (videoBtn) {
+        const card = videoBtn.closest('.lab-card');
+        const labTitle = card ? card.getAttribute('data-title') : '';
         openVideoModal(videoBtn.getAttribute('data-video'));
+        if (window.telemetry) window.telemetry.trackEvent('VideoPlay', { videoUrl: videoBtn.getAttribute('data-video'), labTitle: labTitle });
+      }
+
+      // Telemetry for action links within cards
+      if (window.telemetry) {
+        const card = e.target.closest('.lab-card');
+        const labTitle = card ? card.getAttribute('data-title') : '';
+
+        // Star button
+        const starLink = e.target.closest('a[title="Star on GitHub"]');
+        if (starLink) window.telemetry.trackEvent('StarClick', { repoUrl: starLink.href });
+
+        // GitHub button
+        const ghLink = e.target.closest('a[title="View on GitHub"]');
+        if (ghLink) window.telemetry.trackEvent('GitHubOpen', { repoUrl: ghLink.href });
+
+        // VS Code link
+        const vsCodeLink = e.target.closest('a[role="menuitem"][href^="vscode://"]');
+        if (vsCodeLink) window.telemetry.trackEvent('VSCodeOpen', { repoUrl: vsCodeLink.href });
+
+        // Codespace link
+        const csLink = e.target.closest('a[role="menuitem"][href*="codespaces/new"]');
+        if (csLink) window.telemetry.trackEvent('CodespaceOpen', { repoUrl: csLink.href });
+
+        // Lab card title click
+        const titleLink = e.target.closest('.lab-card-title a');
+        if (titleLink) window.telemetry.trackEvent('LabCardClick', { labTitle: labTitle, category: card ? card.getAttribute('data-category') : '' });
       }
     });
 

@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>App Modernization Labs | 🎮 Level Up Your Apps</title>
-  <meta name="description" content="A retro 8-bit styled gallery showcasing Application Modernization Labs. Discover labs for code, infra, and data modernization on Azure.">
-  <meta property="og:title" content="App Modernization Labs | 🎮 Level Up Your Apps">
-  <meta property="og:description" content="Discover labs for code, infra, and data modernization on Azure with a retro 8-bit gaming aesthetic.">
+  <title>Agentic App Enablement Labs | 🎮 Level Up Your Repos</title>
+  <meta name="description" content="A retro 8-bit styled gallery showcasing Agentic Application Enablement Labs. Discover labs for agentic enablement of repositories — code, infra, data modernization, and more.">
+  <meta property="og:title" content="Agentic App Enablement Labs | 🎮 Level Up Your Repos">
+  <meta property="og:description" content="Discover labs for agentic enablement of repositories — code, infra, data modernization, and spec-driven development with a retro 8-bit gaming aesthetic.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://emeaappgbb.github.io/AppModernizationLabs/">
   <meta property="og:image" content="https://emeaappgbb.github.io/AppModernizationLabs/assets/og-image.png">
-  <base href="/AppModernizationLabs/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -23,7 +22,7 @@
     <div class="header-content">
       <div class="header-left">
         <div class="logo-area">
-          <svg class="logo-svg" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-label="App Mod Labs Logo">
+          <svg class="logo-svg" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-label="Agentic Labs Logo">
             <rect x="4" y="4" width="8" height="8" fill="currentColor" opacity="0.8"/>
             <rect x="16" y="4" width="8" height="8" fill="currentColor"/>
             <rect x="28" y="4" width="8" height="8" fill="currentColor" opacity="0.6"/>
@@ -36,8 +35,8 @@
           </svg>
         </div>
         <div class="header-titles">
-          <h1 class="site-title">APP MOD LABS</h1>
-          <p class="site-tagline">Level Up Your Apps 🎮</p>
+          <h1 class="site-title">AGENTIC LABS</h1>
+          <p class="site-tagline">Level Up Your Repos 🎮</p>
         </div>
       </div>
       <div class="header-right">
@@ -89,6 +88,8 @@
             <option value="Code Modernization">Code Modernization</option>
             <option value="Infra Modernization">Infra Modernization</option>
             <option value="Data Modernization">Data Modernization</option>
+            <option value="Agentic Software Development">Agentic Software Development</option>
+            <option value="Spec-Driven Development">Spec-Driven Development</option>
           </select>
         </div>
 
@@ -127,7 +128,7 @@
         </div>
 
         <div class="filter-group" id="toolsFilterGroup">
-          <label class="filter-label">Modernization Tools</label>
+          <label class="filter-label">Enablement Tools</label>
           <div class="filter-checkboxes" id="toolsFilters"></div>
         </div>
 
@@ -172,7 +173,7 @@
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; Microsoft. Built with ❤️ and 🎮 using GitHub Copilot</p>
+      <p>&copy; Microsoft. Agentic App Enablement Labs — Built with ❤️ and 🎮 using GitHub Copilot</p>
       <a href="https://github.com/EmeaAppGbb/AppModernizationLabs" target="_blank" rel="noopener" class="footer-link">
         GitHub Repo
       </a>
@@ -189,6 +190,13 @@
     </div>
   </div>
 
+  <!-- Application Insights SDK (CDN) -->
+  <script src="https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js" crossorigin="anonymous"></script>
+  <script>
+    // Application Insights configuration — set via deployment environment
+    window.APP_INSIGHTS_CONNECTION_STRING = 'InstrumentationKey=cd4bbd79-ec12-44ac-80b4-b9326e93eade;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=f92383fe-8a1b-47a6-afa9-d2224b84925e';
+  </script>
+  <script src="telemetry.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
