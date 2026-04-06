@@ -7,7 +7,9 @@ on:
       - 'index.html'
       - 'styles.css'
       - 'script.js'
+      - 'telemetry.js'
       - 'appmodlab.json'
+      - 'package.json'
       - 'assets/**'
   workflow_dispatch:
 
@@ -42,11 +44,21 @@ jobs:
           cp ../main-src/index.html .
           cp ../main-src/styles.css .
           cp ../main-src/script.js .
+          cp ../main-src/telemetry.js .
           cp ../main-src/appmodlab.json .
+          cp ../main-src/package.json .
           cp -r ../main-src/assets .
 
           echo "📦 Pages branch contents:"
           ls -la
+        working-directory: ${{ github.workspace }}
+
+      - name: Inject Application Insights connection string
+        if: ${{ secrets.APP_INSIGHTS_CONNECTION_STRING != '' }}
+        run: |
+          cd pages-dest
+          sed -i "s|window.APP_INSIGHTS_CONNECTION_STRING = window.APP_INSIGHTS_CONNECTION_STRING || '';|window.APP_INSIGHTS_CONNECTION_STRING = '${{ secrets.APP_INSIGHTS_CONNECTION_STRING }}';|" index.html
+          echo "✅ App Insights connection string injected"
         working-directory: ${{ github.workspace }}
 
       - name: Commit and push
