@@ -9,6 +9,12 @@
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 - **Rename:** Project renamed from "App Modernization Labs" to "Agentic Application Enablement Labs". Short form in header: "AGENTIC LABS". Tagline: "Level Up Your Repos 🎮".
+- **Telemetry:** `telemetry.js` wraps Azure Application Insights SDK (`@microsoft/applicationinsights-web` via CDN `ai.3.gbl.min.js`). Exposes `window.telemetry.trackEvent(name, props)` globally; gracefully no-ops when connection string is empty.
+- **App Insights config:** Connection string is set via `window.APP_INSIGHTS_CONNECTION_STRING` — a deployment-time variable. Placeholder in `index.html` allows injection during CI/CD.
+- **Telemetry events tracked:** LabCardClick, StartMenuOpen, CloneClick, VSCodeOpen, CodespaceOpen, VideoPlay, ShareClick, StarClick, GitHubOpen, FilterChange, Search, ThemeToggle — all fire from `script.js` delegated click/change handlers.
+- **Non-blocking pattern:** All telemetry calls guard on `if (window.telemetry)` so the site fully works even if SDK fails to load or connection string is absent.
+- **Card data attributes:** Lab cards carry `data-title` and `data-category` attributes for telemetry context without re-querying data.
+- **Script load order:** index.html loads: AI SDK CDN → inline config → telemetry.js → script.js.
 - `<base href>` tag removed from index.html — it broke local development and wasn't needed since all asset URLs are relative.
 - Category filter now includes 5 options: Code Modernization, Infra Modernization, Data Modernization, Agentic Software Development, Spec-Driven Development.
 - Sidebar label "Modernization Tools" renamed to "Enablement Tools" to match new project scope.
@@ -49,4 +55,22 @@
 - New categories (Agentic Software Development, Spec-Driven Development) integrated into filter UI
 - Base href removal confirmed working with Chunk's local dev server (npm run dev)
 - All team members notified of scope expansion and category structure decisions
+
+## Team Sync (2026-04-06, Session 4 — Telemetry & Dashboard Batch)
+
+**Application Insights telemetry integration complete:**
+- Created `telemetry.js` wrapper around App Insights JS SDK (CDN `ai.3.gbl.min.js`, no npm dependency)
+- Tracks 12 custom events: LabCardClick, StartMenuOpen, CloneClick, VSCodeOpen, CodespaceOpen, VideoPlay, ShareClick, StarClick, GitHubOpen, FilterChange, Search, ThemeToggle
+- Connection string via `window.APP_INSIGHTS_CONNECTION_STRING` (injection by Chunk during deployment)
+- Script load order: AI SDK CDN → config → telemetry.js → script.js
+- All telemetry calls guard on `if (window.telemetry)` — non-blocking if SDK fails
+- Frontend fixes verified: Start dropdown, Share modal, Video modal, clickable titles, light mode sidebar
+- Handoff: Chunk must inject real connection string at deployment (default empty string for development)
+
+**Dashboard readiness:**
+- Mikey's Blazor dashboard reads App Insights REST API (read-only, no SDK coupling)
+- Kusto queries in AppInsightsService map to custom events from telemetry tracking
+- Chart.js interop for retro-styled metrics visualization
+- Memory cache (5-min TTL) prevents API throttling
+- All team members notified of telemetry structure and dashboard integration points
 

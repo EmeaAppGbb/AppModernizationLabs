@@ -38,3 +38,52 @@
 - All team members notified of expanded scope and category decisions
 - Pending: Sloth/Andy design category icons/colors for new categories
 
+### Dashboard App — Blazor Server Telemetry Dashboard
+
+**Architecture decisions:**
+- Dashboard lives at `dashboard/` in the repo root as a standalone .NET Blazor Server app
+- Targets net9.0 (marked with TODO comments to upgrade to net10.0 when GA)
+- Structure: `dashboard/Dashboard.sln` → `dashboard/src/Dashboard/` (single project, clean layout)
+- Uses Application Insights REST API (`api.applicationinsights.io`) with Kusto queries — reads-only, no SDK dependency
+- YouTube Data API v3 integration is optional — service gracefully returns empty results if not configured
+- Chart.js via JS interop (`wwwroot/js/charts.js`) with `window.RetroCharts` namespace for all chart rendering
+- Retro 8-bit CSS (`wwwroot/css/retro-dashboard.css`) shares the exact same palette and fonts as the main gallery site
+- 5-minute TTL memory cache on all App Insights queries to avoid API throttling
+- Configuration via `appsettings.json`: `AppInsights:AppId`, `AppInsights:ApiKey`, `YouTube:ApiKey`, `YouTube:ChannelId`
+- Dockerized with multi-stage build targeting port 8080
+
+**Key file paths:**
+- Solution: `dashboard/Dashboard.sln`
+- Main project: `dashboard/src/Dashboard/Dashboard.csproj`
+- Services: `dashboard/src/Dashboard/Services/AppInsightsService.cs`, `YouTubeAnalyticsService.cs`
+- Models: `dashboard/src/Dashboard/Models/` (5 metric model files)
+- Pages: `dashboard/src/Dashboard/Components/Pages/` (Home, PageViews, LabEngagement, UserActivity, VideoMetrics, ShareMetrics)
+- Retro CSS: `dashboard/src/Dashboard/wwwroot/css/retro-dashboard.css`
+- Chart interop: `dashboard/src/Dashboard/wwwroot/js/charts.js`
+- Docker: `dashboard/Dockerfile`, `dashboard/.dockerignore`
+
+**Razor gotcha:** Avoid naming loop variables `page` in Razor files — the Razor compiler mistakes `@page.X` for the `@page` directive. Use `pv`, `item`, etc. instead.
+
+## Team Sync (2026-04-06, Session 4 — Telemetry & Dashboard Batch)
+
+**Blazor dashboard implementation complete:**
+- Full .NET 9 Blazor Server dashboard at `dashboard/` with 6 pages: Home, PageViews, LabEngagement, UserActivity, VideoMetrics, ShareMetrics
+- Uses Application Insights REST API (`api.applicationinsights.io`) with Kusto queries — read-only, no SDK instrumentation
+- Chart.js via JS interop with `window.RetroCharts` namespace — lighter than Blazor-native charting, matches retro aesthetic
+- Retro 8-bit CSS (`wwwroot/css/retro-dashboard.css`) mirrors main gallery palette and fonts for visual consistency
+- 5-minute TTL memory cache on all App Insights queries to prevent throttling
+- Dockerfile (multi-stage) ready for Azure Container Apps, exposes port 8080
+- Optional YouTube API integration with graceful fallback if not configured
+- Configuration via `appsettings.json`: `AppInsights:AppId`, `AppInsights:ApiKey`, `YouTube:ApiKey`, `YouTube:ChannelId`
+
+**Integration points:**
+- Data: Kusto queries in `AppInsightsService.cs` map to custom telemetry events from `telemetry.js` (LabCardClick, VideoPlay, ShareClick, etc.)
+- Chunk: Dashboard ready for Azure Container Apps deployment via azd infrastructure
+- Frontend (Sloth/Andy): CSS palette must remain in sync with main gallery `styles.css`
+
+**Architecture notes:**
+- REST API approach (vs SDK) keeps dashboard read-only and decouples from instrumentation logic
+- Memory cache prevents API throttling; 5-min TTL balances freshness vs performance
+- Kusto queries capture domain-specific metrics: page views by category, video engagement, share impact, user activity patterns
+- Targeting net9.0 with TODO markers for net10.0 upgrade when GA
+
