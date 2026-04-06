@@ -358,8 +358,8 @@
     navigator.clipboard.writeText(cmd).then(
       () => {
         const orig = btn.textContent;
-        btn.textContent = '✅ Copied!';
-        setTimeout(() => (btn.textContent = orig), 2000);
+        btn.textContent = '✅ Copied! Paste in terminal';
+        setTimeout(() => (btn.textContent = orig), 3000);
       },
       () => {
         // Fallback
@@ -370,8 +370,8 @@
         document.execCommand('copy');
         document.body.removeChild(ta);
         const orig = btn.textContent;
-        btn.textContent = '✅ Copied!';
-        setTimeout(() => (btn.textContent = orig), 2000);
+        btn.textContent = '✅ Copied! Paste in terminal';
+        setTimeout(() => (btn.textContent = orig), 3000);
       }
     );
   }
