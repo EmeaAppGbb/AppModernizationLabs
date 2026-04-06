@@ -485,6 +485,9 @@ ul, ol { list-style: none; }
 }
 
 .sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-family: var(--font-heading);
   font-size: 10px;
   color: var(--primary);
@@ -493,6 +496,10 @@ ul, ol { list-style: none; }
   border-bottom: 2px dashed var(--border-color);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.sidebar-close {
+  flex-shrink: 0;
 }
 
 .filter-group {
