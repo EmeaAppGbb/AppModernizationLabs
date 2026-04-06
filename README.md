@@ -1,20 +1,22 @@
-# 🎮 App Modernization Labs
+# 🎮 Agentic Application Enablement Labs
+
+> **🚀 [Browse the Live Gallery →](https://EmeaAppGbb.github.io/AppModernizationLabs/)**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Level Up Your Apps** — A retro 8-bit gallery of application modernization laboratories
+**Level Up Your Repos** — A retro 8-bit gallery of hands-on labs for agentic enablement, application modernization, and spec-driven development
 
-![App Modernization Labs](assets/og-image.svg)
+![Agentic Application Enablement Labs](assets/og-image.svg)
 
 ## 🤔 What is this?
 
-App Modernization Labs is a curated gallery of hands-on, practical labs for modernizing your applications using Azure and GitHub tools. Each lab is a complete, ready-to-run repository that walks you through modernizing a specific technology stack or architectural pattern.
+Agentic Application Enablement Labs is a curated gallery of hands-on, practical labs for enabling your repositories with AI agents and modernizing your applications using Azure and GitHub tools. Labs cover three core areas: **Application Modernization** (modernizing legacy code and infrastructure), **Agentic Software Development** (using SQUAD to build agent-powered systems), and **Spec-Driven Development** (using Spec2Cloud to modernize from specifications).
 
-From .NET monoliths to legacy databases, from cloud infrastructure to AI-powered features—pick a lab, follow the steps, and level up your app modernization skills.
+From .NET monoliths to legacy databases, from cloud infrastructure to AI-powered agentic features—pick a lab, follow the steps, and level up your repo enablement and modernization skills.
 
 ## 🚀 Quick Start
 
-Head to the **[App Modernization Labs Gallery](https://EmeaAppGbb.github.io/AppModernizationLabs/)** and browse available labs. Click any lab card to:
+Head to the **[Agentic Application Enablement Labs Gallery](https://EmeaAppGbb.github.io/AppModernizationLabs/)** and browse available labs. Click any lab card to:
 - See a full description and learning objectives
 - Visit the lab's GitHub repository
 - Find step-by-step instructions and code samples
@@ -60,7 +62,7 @@ version: "1.0.0"                                           # (optional) Semantic
 # Your Lab Content Here
 ```
 
-**Category options:** Code Modernization | Infra Modernization | Data Modernization
+**Category options:** Code Modernization | Infra Modernization | Data Modernization | Agentic Software Development | Spec-Driven Development
 
 **Industry options:** Cross-Industry | Financial Services | Healthcare & Life Sciences | Manufacturing | Retail & Consumer Goods | Government & Public Sector | Education | Energy & Resources | Telco & Media | Mobility & Automotive
 
@@ -70,7 +72,7 @@ See [LABTemplate.md](LABTemplate.md) for the complete template with all availabl
 
 ## 🏗️ Architecture
 
-The lab gallery works like this:
+The lab gallery ingests labs from repositories and renders them in a browsable, filterable gallery:
 
 ```
 Your Lab Repo (APPMODLAB.MD)
@@ -84,8 +86,8 @@ Your Lab Repo (APPMODLAB.MD)
 
 When you submit a lab, a GitHub Action:
 1. Fetches your `APPMODLAB.MD` metadata
-2. Validates the format
-3. Generates `appmodlab.json` entry
+2. Validates the format and metadata fields
+3. Generates `appmodlab.json` entry with enablement tools and agenticTools
 4. Deploys the updated gallery
 
 ## 🤝 Contributing

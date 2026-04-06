@@ -32,6 +32,7 @@
   --error:         #ff4757;
   --success:       #2ed573;
   --card-border:   #4a4a8a;
+  --filter-label-color: #5a4a00;
 
   /* Typography */
   --font-heading:  'Press Start 2P', cursive;
@@ -62,6 +63,7 @@
   --overlay-bg:    rgba(0, 0, 0, 0.75);
   --input-bg:      #1a1a3e;
   --scanline-alpha: 0.05;
+  --filter-label-color: #ffd93d;
 }
 
 /* ── 2. Reset & Base ────────────────────────────────────────── */
@@ -502,7 +504,7 @@ ul, ol { list-style: none; }
   display: block;
   font-family: var(--font-heading);
   font-size: 7px;
-  color: var(--accent);
+  color: var(--filter-label-color);
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -873,6 +875,14 @@ ul, ol { list-style: none; }
   display: flex;
   align-items: center;
   gap: 6px;
+  flex: 1;
+}
+
+.lab-card-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
 }
 
 /* ── 13. Badges ─────────────────────────────────────────────── */
@@ -961,9 +971,9 @@ ul, ol { list-style: none; }
 }
 
 .start-lab-dropdown .dropdown-menu {
-  right: auto;
-  left: 0;
-  min-width: 180px;
+  right: 0;
+  left: auto;
+  min-width: 220px;
 }
 
 /* ── 15. Avatar / Author ────────────────────────────────────── */
