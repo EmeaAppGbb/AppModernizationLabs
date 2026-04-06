@@ -626,7 +626,7 @@ ul, ol { list-style: none; }
   z-index: 40;
 }
 
-.sidebar-overlay.show {
+.sidebar-overlay.open {
   display: block;
 }
 
@@ -764,7 +764,7 @@ ul, ol { list-style: none; }
   transition: transform var(--transition-fast),
               box-shadow var(--transition-fast),
               border-color var(--transition-fast);
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 }
 
