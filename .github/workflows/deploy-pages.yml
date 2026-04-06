@@ -54,10 +54,12 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Inject Application Insights connection string
-        if: ${{ secrets.APP_INSIGHTS_CONNECTION_STRING != '' }}
+        if: ${{ env.APP_INSIGHTS_CS != '' }}
+        env:
+          APP_INSIGHTS_CS: ${{ secrets.APP_INSIGHTS_CONNECTION_STRING }}
         run: |
           cd pages-dest
-          sed -i "s|window.APP_INSIGHTS_CONNECTION_STRING = window.APP_INSIGHTS_CONNECTION_STRING || '';|window.APP_INSIGHTS_CONNECTION_STRING = '${{ secrets.APP_INSIGHTS_CONNECTION_STRING }}';|" index.html
+          sed -i "s|window.APP_INSIGHTS_CONNECTION_STRING = window.APP_INSIGHTS_CONNECTION_STRING || '';|window.APP_INSIGHTS_CONNECTION_STRING = '${APP_INSIGHTS_CS}';|" index.html
           echo "✅ App Insights connection string injected"
         working-directory: ${{ github.workspace }}
 
