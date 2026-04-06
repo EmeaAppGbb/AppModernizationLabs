@@ -228,11 +228,11 @@
     const categoryClass = (lab.category || '').replace(/\s+/g, '-').toLowerCase();
 
     const languageBadges = (lab.languages || [])
-      .map((l) => `<span class="badge badge-language">${escapeHTML(l)}</span>`)
+      .map((l) => `<span class="badge badge-language" data-filter-type="languages" data-filter-value="${escapeAttr(l)}">${escapeHTML(l)}</span>`)
       .join('');
 
     const frameworkBadges = (lab.frameworks || [])
-      .map((f) => `<span class="badge badge-framework">${escapeHTML(f)}</span>`)
+      .map((f) => `<span class="badge badge-framework" data-filter-type="frameworks" data-filter-value="${escapeAttr(f)}">${escapeHTML(f)}</span>`)
       .join('');
 
     const avatars = (lab.authors || [])
@@ -260,7 +260,7 @@
         <h3 class="lab-card-title"><a href="${escapeAttr(lab.repoUrl || '#')}" target="_blank" rel="noopener">${escapeHTML(lab.title)}</a></h3>
         <p class="lab-card-description">${escapeHTML(truncate(lab.description, 140))}</p>
         <div class="lab-card-tags">
-          <span class="badge badge-category badge-${categoryClass}">${escapeHTML(lab.category || 'Uncategorized')}</span>
+          <span class="badge badge-category badge-${categoryClass}" data-filter-type="category" data-filter-value="${escapeAttr(lab.category || '')}">${escapeHTML(lab.category || 'Uncategorized')}</span>
           ${languageBadges}
           ${frameworkBadges}
         </div>
@@ -516,6 +516,22 @@
         const labTitle = card ? card.getAttribute('data-title') : '';
         openVideoModal(videoBtn.getAttribute('data-video'));
         if (window.telemetry) window.telemetry.trackEvent('VideoPlay', { videoUrl: videoBtn.getAttribute('data-video'), labTitle: labTitle });
+      }
+
+      // Badge filter click
+      const badge = e.target.closest('.badge[data-filter-type]');
+      if (badge) {
+        e.preventDefault();
+        const filterType = badge.getAttribute('data-filter-type');
+        const filterValue = badge.getAttribute('data-filter-value');
+        if (filterType === 'category' && filterValue) {
+          categoryFilter.value = filterValue;
+        } else if (filterType === 'languages' || filterType === 'frameworks') {
+          const cb = document.querySelector(`input[data-filter-group="${filterType}"][value="${filterValue}"]`);
+          if (cb) cb.checked = true;
+        }
+        applyFilters();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       // Telemetry for action links within cards
