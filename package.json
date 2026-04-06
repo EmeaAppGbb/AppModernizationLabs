@@ -1,0 +1,11 @@
+{
+  "name": "agentic-app-enablement-labs",
+  "description": "Agentic Application Enablement Labs — a retro 8-bit gallery of hands-on labs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "start": "npx serve . -l 3000"
+  },
+  "license": "MIT"
+}

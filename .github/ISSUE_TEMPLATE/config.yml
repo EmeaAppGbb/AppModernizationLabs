@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: "🎮 Live Gallery"
     url: "https://EmeaAppGbb.github.io/AppModernizationLabs/"
-    about: "Browse the App Modernization Labs gallery"
+    about: "Browse the Agentic Application Enablement Labs gallery"
   - name: "📋 Lab Template"
     url: "https://github.com/EmeaAppGbb/AppModernizationLabs/blob/main/LABTemplate.md"
     about: "Get the APPMODLAB.MD template for your lab"

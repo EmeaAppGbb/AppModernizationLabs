@@ -9,12 +9,13 @@ Fill in the metadata below. Required fields are marked with * and should not be 
 title: "" # * Required. Short name of your lab. Limit to 40 characters or less. Example: "Modernize .NET App with Aspire"
 description: "" # * Required. One-line summary of what the lab covers. Limit to 140 characters or less. Example: "Step-by-step guide to containerize legacy .NET apps with Aspire and Azure Container Apps"
 authors: [] # * Required. List of GitHub handles of main contributors. Example: ["octocat", "github-user"]
-category: "" # * Required. One of: "Code Modernization" | "Infra Modernization" | "Data Modernization"
+category: "" # * Required. One of: "Code Modernization" | "Infra Modernization" | "Data Modernization" | "Agentic Software Development" | "Spec-Driven Development"
 industry: "" # * Required. Industry vertical. One of: "Cross-Industry" | "Financial Services" | "Healthcare & Life Sciences" | "Manufacturing" | "Retail & Consumer Goods" | "Government & Public Sector" | "Education" | "Energy & Resources" | "Telco & Media" | "Mobility & Automotive"
 services: [] # (Optional) Azure services used. Examples: ["Azure Container Apps", "Azure CosmosDB", "Azure Kubernetes Service"]. Full list: https://azure.microsoft.com/en-us/products/
 languages: [] # (Optional) Programming languages and tech stacks used. Examples: [".NET", "Python", "TypeScript"]. Available: .NET | Python | Java | Go | TypeScript | JavaScript | BICEP | Terraform | COBOL
 frameworks: [] # (Optional) Frameworks and platforms. Examples: ["Aspire", "Microsoft Agent Framework", "LangChain"]. Available: Microsoft Agent Framework | Aspire | LangChain | Pydantic AI
-modernizationTools: [] # (Optional) Modernization-specific tools used. Examples: ["Azure Migrate", "GitHub Copilot", "Dr Migrate"]. Available: Dr Migrate | Azure Migrate | GitHub Copilot Modernization | Spec2Cloud
+modernizationTools: [] # (Optional) Enablement tools used. Examples: ["Azure Migrate", "GitHub Copilot", "SQUAD"]. Available: Dr Migrate | Azure Migrate | GitHub Copilot Modernization | Spec2Cloud | SQUAD
+agenticTools: [] # (Optional) Agentic development tools used. Examples: ["SQUAD", "GitHub Copilot Agent"]. Available: SQUAD | GitHub Copilot Agent | Copilot Workspace
 tags: [] # (Optional) Custom tags for categorization and discoverability. Examples: ["containers", "migration", "scalability"]
 extensions: [] # (Optional) VS Code extension IDs for recommended extensions. Examples: ["ms-windows-ai-studio.windows-ai-studio", "ms-vscode.azure-account"]
 thumbnail: "" # (Optional) URL or relative path to lab thumbnail image. Recommended: 16:9 aspect ratio (1280×720 or 1920×1080). Example: "assets/thumbnail.png" or "https://example.com/lab-preview.png"

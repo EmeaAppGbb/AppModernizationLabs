@@ -1,5 +1,5 @@
 name: "🎮 Add New Lab"
-description: "Submit a new application modernization lab to the gallery"
+description: "Submit a new agentic enablement lab to the gallery"
 title: "[New Lab]: "
 labels: ["new-lab"]
 body:
@@ -40,6 +40,8 @@ body:
         - Code Modernization
         - Infra Modernization
         - Data Modernization
+        - Agentic Software Development
+        - Spec-Driven Development
     validations:
       required: true
   - type: checkboxes

@@ -1,6 +1,6 @@
-# App Modernization Labs
+# Agentic Application Enablement Labs
 
-List of GitHub repositories containing application modernization labs.
+List of GitHub repositories containing agentic enablement, application modernization, and spec-driven development labs.
 Each repository must contain an `APPMODLAB.MD` file with the required metadata.
 
 - https://github.com/EmeaAppGbb/AppModLab-dotnet-4to10-contosouniversity-spec2cloud

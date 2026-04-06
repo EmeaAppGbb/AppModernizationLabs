@@ -1,6 +1,6 @@
-# Contributing to App Modernization Labs
+# Contributing to Agentic Application Enablement Labs
 
-Thanks for your interest in contributing to App Modernization Labs! Whether you're adding a new lab, reporting an issue, or improving the gallery itself, we appreciate your help.
+Thanks for your interest in contributing to Agentic Application Enablement Labs! Whether you're adding a new lab, reporting an issue, or improving the gallery itself, we appreciate your help.
 
 ## 🎯 Ways to Contribute
 
@@ -90,7 +90,7 @@ Every lab **must** include these fields in `APPMODLAB.MD`:
 
 - **services** — Azure services used (e.g., "Azure Container Apps", "Azure CosmosDB")
 - **frameworks** — Frameworks and tools (e.g., "Aspire", "Microsoft Agent Framework")
-- **modernizationTools** — Modernization-specific tools (e.g., "Dr Migrate", "GitHub Copilot")
+- **modernizationTools** — Modernization-specific tools (e.g., "Dr Migrate", "GitHub Copilot", "SQUAD")
 - **tags** — Custom labels for better discoverability
 - **thumbnail** — Lab preview image (16:9 aspect ratio preferred: 1280×720 or 1920×1080)
 - **video** — Demo video URL
@@ -126,4 +126,4 @@ Before submitting your lab:
 - 🎮 Visit the [live gallery](https://EmeaAppGbb.github.io/AppModernizationLabs/)
 - 💬 Open an issue to ask questions
 
-Thank you for contributing to App Modernization Labs! 🚀
+Thank you for contributing to Agentic Application Enablement Labs! 🚀
