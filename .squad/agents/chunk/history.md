@@ -18,6 +18,7 @@
 - **Workflow chaining via path triggers:** `process-labs.yml` commits `appmodlab.json` to `main` → `deploy-pages.yml` triggers on `appmodlab.json` path changes → syncs to `pages` branch. No explicit workflow dispatch needed; the path trigger creates automatic chaining.
 - **Orphan branch creation gotcha on Windows:** When creating an orphan branch, all tracked files become untracked. Switching back to `main` requires `git checkout -f main` to force-overwrite the untracked files that conflict with main's tracked files.
 
+- **Local dev server added:** Created `package.json` with `npm run dev` / `npm start` scripts using `npx serve . -l 3000`. No dependencies to install — `npx` handles it. `.gitignore` updated with `node_modules/` and `.env`. `deploy-pages.yml` updated to sync `package.json` to the pages branch and trigger on its changes.
 - **CI/CD pipeline architecture:** Three workflows established — `process-labs.yml` (reads labs.md → builds appmodlab.json), `process-new-lab-issue.yml` (validates issue submissions → creates PRs), `deploy-pages.yml` (deploys site to GitHub Pages). All use Python for YAML/API processing — no extra tooling needed since `pyyaml` is pip-installable and `urllib` is stdlib.
 - **labs.md is the source of truth:** The master lab list lives in `labs.md` at repo root. One GitHub URL per line. The process-labs workflow parses it, fetches APPMODLAB.MD from each repo via GitHub API, and outputs `appmodlab.json`.
 - **GitHub Pages deployment uses a staging directory (`_site`):** The `upload-pages-artifact` action doesn't support `exclude`, so we copy files to `_site/` first, omitting `.git`, `.squad`, `.github`, `.copilot`, etc.
@@ -31,3 +32,14 @@
 - Mouth's CONTRIBUTING.md and README document the full submission workflow — reduces support overhead
 - All three workflows tested locally; ready for GitHub Actions deployment
 - `labs.md` remains human-editable for quick lab additions without code changes
+
+## Team Sync (2026-04-06, Session 3)
+
+**Scope expansion and local dev implementation complete:**
+- Created `package.json` with zero-dependency local dev server (npx serve . -l 3000)
+- Updated `deploy-pages.yml` to sync package.json and validate on changes
+- `.gitignore` updated with node_modules/ and .env
+- Local dev server enables site testing without GitHub Pages (works with Data's base href removal)
+- Confirmed backward compatibility — no breaking changes to CI/CD pipeline
+- All team members notified of local dev capability and scope expansion
+

@@ -8,6 +8,11 @@
 ## Learnings
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
+- **Rename:** Project renamed from "App Modernization Labs" to "Agentic Application Enablement Labs". Short form in header: "AGENTIC LABS". Tagline: "Level Up Your Repos 🎮".
+- `<base href>` tag removed from index.html — it broke local development and wasn't needed since all asset URLs are relative.
+- Category filter now includes 5 options: Code Modernization, Infra Modernization, Data Modernization, Agentic Software Development, Spec-Driven Development.
+- Sidebar label "Modernization Tools" renamed to "Enablement Tools" to match new project scope.
+- GitHub repo URLs (EmeaAppGbb/AppModernizationLabs) kept as-is — repo not renamed on GitHub yet. OG URLs also unchanged.
 - **2026-03-20:** Built `index.html`, `script.js`, and sample `appmodlab.json` at repo root.
 - Architecture: Single-page static site; JS IIFE pattern; no build tooling needed.
 - CSS class contract shared with Sloth (styles.css author): `.header`, `.sidebar`, `.gallery-grid`, `.lab-card`, `.badge-*`, `.dropdown`, `.modal`, `.footer`, etc.
@@ -35,3 +40,13 @@
 - Tech stack representation: Node.js, Python, Go, Java, C#, TypeScript, React, Vue, AWS/Azure/GCP
 - All entries enforce APPMODLAB.MD metadata contract (title ≤40, description ≤140, required fields)
 - Enhanced sample dataset validates frontend filtering logic across diverse scenarios
+
+## Team Sync (2026-04-06, Session 3)
+
+**Scope expansion implementation complete:**
+- Project renamed to "Agentic Application Enablement Labs" across all user-facing content
+- Removal of `<base href>` enables both local file:// development and GitHub Pages deployment
+- New categories (Agentic Software Development, Spec-Driven Development) integrated into filter UI
+- Base href removal confirmed working with Chunk's local dev server (npm run dev)
+- All team members notified of scope expansion and category structure decisions
+

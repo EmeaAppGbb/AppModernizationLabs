@@ -1,9 +1,9 @@
 ---
-updated_at: 2026-03-19T23:37:58.763Z
-focus_area: Initial setup
+updated_at: 2026-04-06T13:10:00Z
+focus_area: Portal scope expansion — Agentic Application Enablement
 active_issues: []
 ---
 
 # What We're Focused On
 
-Getting started. Updated by coordinator at session start.
+Major scope expansion: renaming from "App Modernization Labs" to "Agentic Application Enablement Labs". Adding new categories (Agentic Software Development, Spec-Driven Development) alongside existing ones. Expanding backlog with SQUAD and Spec2Cloud labs. Fixing local development support.

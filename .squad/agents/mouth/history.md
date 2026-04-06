@@ -8,10 +8,12 @@
 ## Learnings
 
 - The lab submission pipeline requires strict metadata validation: title ≤40 chars, description ≤140 chars. This ensures consistency across the gallery and forces clarity from lab authors.
-- Lab categorization is three-way (Code, Infra, Data Modernization) and industry is required to enable filtering. This drives discoverability for different user personas.
+- Lab categorization is five-way (Code, Infra, Data Modernization + Agentic Software Development + Spec-Driven Development) and industry is required to enable filtering. This drives discoverability for different user personas.
 - APPMODLAB.MD is the "contract" between lab repos and the gallery. Keeping the template well-documented with examples prevents submission errors and support overhead.
 - GitHub issue templates should guide users through submission requirements and surface the live gallery and template links prominently for easy navigation.
 - MIT license with 2026 copyright aligns with Microsoft open source standards. LICENSE file at repo root is standard practice.
+- Project renamed to "Agentic Application Enablement Labs" to reflect broader scope: not just modernization labs but also agentic software development (SQUAD-based) and spec-driven development. Backward compatibility maintained—repo name and URLs stay unchanged, APPMODLAB.MD field names (e.g., `modernizationTools`) preserved.
+- Two new tool fields added: `modernizationTools` expanded to include "SQUAD"; new optional `agenticTools` field for labs focused on agentic development.
 
 ## Team Sync (2026-03-20, Session 1)
 
@@ -31,3 +33,13 @@
 - 10 community suggestions integrated; duplicates deduplicated
 - Backlog template aligns with APPMODLAB.MD metadata contract for future consistency
 - Roadmap provides direction for community contributions and demonstrates modernization scenario breadth
+
+## Team Sync (2026-04-06, Session 3)
+
+**Scope expansion implementation complete:**
+- Documentation updated across 7 files to reflect "Agentic Application Enablement Labs" branding
+- New categories (Agentic Software Development, Spec-Driven Development, Cross-Cutting) integrated into all templates
+- APPMODLAB.MD metadata contract expanded: new `agenticTools` field for agent-focused labs
+- Backward compatibility maintained — repo name, field names, and existing labs unaffected
+- All team members notified of scope expansion and six-category structure
+
