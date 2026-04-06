@@ -29,6 +29,16 @@ param appInsightsConnectionString string
 @description('Application Insights App ID for API queries')
 param appInsightsAppId string
 
+@description('Application Insights API key for REST API queries')
+@secure()
+param appInsightsApiKey string
+
+@description('YouTube Data API key (optional)')
+param youtubeApiKey string = ''
+
+@description('YouTube Channel ID (optional)')
+param youtubeChannelId string = ''
+
 @description('Whether to use ACR image (false = use placeholder for initial provision)')
 param useAcrImage bool = false
 param minReplicas int = 0
@@ -82,6 +92,10 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           name: 'app-insights-connection-string'
           value: appInsightsConnectionString
         }
+        {
+          name: 'app-insights-api-key'
+          value: appInsightsApiKey
+        }
       ]
     }
     template: {
@@ -103,8 +117,20 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
               value: appInsightsAppId
             }
             {
+              name: 'AppInsights__ApiKey'
+              secretRef: 'app-insights-api-key'
+            }
+            {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
               secretRef: 'app-insights-connection-string'
+            }
+            {
+              name: 'YouTube__ApiKey'
+              value: youtubeApiKey
+            }
+            {
+              name: 'YouTube__ChannelId'
+              value: youtubeChannelId
             }
           ]
         }
