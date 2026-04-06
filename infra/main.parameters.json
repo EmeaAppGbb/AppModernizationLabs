@@ -7,6 +7,12 @@
     },
     "location": {
       "value": "${AZURE_LOCATION}"
+    },
+    "youtubeApiKey": {
+      "value": "${YOUTUBE_API_KEY}"
+    },
+    "youtubeChannelId": {
+      "value": "${YOUTUBE_CHANNEL_ID}"
     }
   }
 }
