@@ -59,8 +59,18 @@ jobs:
           APP_INSIGHTS_CS: ${{ secrets.APP_INSIGHTS_CONNECTION_STRING }}
         run: |
           cd pages-dest
-          sed -i "s|window.APP_INSIGHTS_CONNECTION_STRING = window.APP_INSIGHTS_CONNECTION_STRING || '';|window.APP_INSIGHTS_CONNECTION_STRING = '${APP_INSIGHTS_CS}';|" index.html
-          echo "✅ App Insights connection string injected"
+          python3 -c "
+          import re, os
+          cs = os.environ['APP_INSIGHTS_CS']
+          with open('index.html', 'r') as f:
+              content = f.read()
+          content = content.replace(
+              \"window.APP_INSIGHTS_CONNECTION_STRING = window.APP_INSIGHTS_CONNECTION_STRING || '';\",
+              f\"window.APP_INSIGHTS_CONNECTION_STRING = '{cs}';\")
+          with open('index.html', 'w') as f:
+              f.write(content)
+          print('✅ App Insights connection string injected')
+          "
         working-directory: ${{ github.workspace }}
 
       - name: Commit and push
