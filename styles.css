@@ -897,6 +897,7 @@ ul, ol { list-style: none; }
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  cursor: pointer;
   transition: transform var(--transition-fast);
 }
 
