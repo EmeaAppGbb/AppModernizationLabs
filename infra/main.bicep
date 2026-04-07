@@ -15,6 +15,10 @@ param location string = resourceGroup().location
 @description('Docker image tag for the dashboard container')
 param dashboardImageTag string = 'latest'
 
+@description('Application Insights API key (create once via CLI, pass as env var)')
+@secure()
+param appInsightsApiKey string = ''
+
 @description('YouTube Data API key (optional — for video metrics)')
 param youtubeApiKey string = ''
 
@@ -92,7 +96,7 @@ module containerApp 'modules/container-app.bicep' = {
     containerRegistryName: containerRegistry.outputs.name
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsAppId: appInsights.outputs.appId
-    appInsightsApiKey: appInsights.outputs.apiKey
+    appInsightsApiKey: appInsightsApiKey
     youtubeApiKey: youtubeApiKey
     youtubeChannelId: youtubeChannelId
   }
