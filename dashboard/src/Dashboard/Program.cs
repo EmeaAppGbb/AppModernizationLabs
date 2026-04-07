@@ -14,6 +14,13 @@ builder.Services.AddSingleton<YouTubeAnalyticsService>();
 
 var app = builder.Build();
 
+// Log configuration status at startup for deployment diagnostics
+var appInsights = app.Services.GetRequiredService<AppInsightsService>();
+appInsights.LogConfigurationStatus();
+
+var youtube = app.Services.GetRequiredService<YouTubeAnalyticsService>();
+app.Logger.LogInformation("YouTube API configured: {IsConfigured}", youtube.IsConfigured);
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);

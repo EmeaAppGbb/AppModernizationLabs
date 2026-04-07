@@ -124,6 +124,21 @@ a:hover {
 ::-webkit-scrollbar-thumb { background: var(--primary); border: 2px solid var(--border-color); }
 ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
 
+/* ── App Layout ─────────────────────────────────────────────── */
+
+.retro-app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.retro-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-left: 260px;
+}
+
 /* ── Sidebar Navigation ─────────────────────────────────────── */
 
 .retro-sidebar {
@@ -361,6 +376,92 @@ a:hover {
   font-family: var(--font-body);
 }
 
+/* ── Warning Card (config missing) ───────────────────────── */
+
+.retro-card-warning {
+  border-color: var(--accent);
+  background: rgba(255, 217, 61, 0.08);
+  border-width: 3px;
+}
+
+.retro-card-warning h3 {
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.retro-card-warning p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.retro-card-warning code {
+  color: var(--accent);
+  background: rgba(255, 217, 61, 0.1);
+  padding: 2px 6px;
+  border: 1px solid var(--accent);
+  font-family: var(--font-body);
+}
+
+.retro-card-warning a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.config-checklist p {
+  font-family: var(--font-body);
+  font-size: 20px;
+  margin: 6px 0;
+  color: var(--text-primary);
+}
+
+.config-steps {
+  margin-top: 16px;
+}
+
+.config-steps h4 {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.config-steps ol {
+  font-family: var(--font-body);
+  font-size: 20px;
+  color: var(--text-primary);
+  padding-left: 24px;
+  line-height: 1.8;
+}
+
+.config-steps pre {
+  font-family: var(--font-body);
+  font-size: 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  margin: 8px 0;
+  color: var(--primary);
+  overflow-x: auto;
+}
+
+/* ── Status Page ─────────────────────────────────────────── */
+
+.status-ok {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.status-fail {
+  color: var(--error);
+  font-weight: bold;
+}
+
+.status-warn {
+  color: var(--accent);
+  font-weight: bold;
+}
+
 .card-title {
   font-family: var(--font-heading);
   font-size: 10px;
@@ -554,6 +655,10 @@ a:hover {
 
   .retro-sidebar.open {
     transform: translateX(0);
+  }
+
+  .retro-main {
+    margin-left: 0;
   }
 
   .stats-row {

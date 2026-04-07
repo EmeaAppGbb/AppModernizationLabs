@@ -18,6 +18,13 @@
     }
     else
     {
+        @if (!AppInsights.IsConfigured)
+        {
+            <div class="retro-card retro-card-warning retro-card-wide">
+                <h3>⚠️ APP INSIGHTS NOT CONFIGURED</h3>
+                <p>Video data requires both <code>AppInsights:AppId</code> and <code>AppInsights:ApiKey</code>. Visit <a href="status">System Status</a> for setup instructions.</p>
+            </div>
+        }
         <!-- Stats Row -->
         <div class="stats-row">
             <div class="stat-card stat-card-primary">

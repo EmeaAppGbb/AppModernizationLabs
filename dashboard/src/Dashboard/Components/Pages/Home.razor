@@ -7,6 +7,29 @@
 <PageTitle>Dashboard Overview</PageTitle>
 
 <div class="dashboard-grid">
+    @if (!AppInsights.IsConfigured)
+    {
+        <div class="retro-card retro-card-warning retro-card-wide">
+            <h3 class="card-title">⚠️ APP INSIGHTS NOT CONFIGURED</h3>
+            <p>The dashboard cannot query telemetry data. Both <code>AppInsights:AppId</code> and <code>AppInsights:ApiKey</code> must be set.</p>
+            <div class="config-checklist">
+                <p>@(AppInsights.HasAppId ? "✅" : "❌") <strong>AppId</strong> — @(AppInsights.HasAppId ? "Present" : "Missing — set via <code>AppInsights__AppId</code> env var")</p>
+                <p>@(AppInsights.HasApiKey ? "✅" : "❌") <strong>ApiKey</strong> — @(AppInsights.HasApiKey ? "Present" : "Missing — create an API key in Azure Portal → App Insights → API Access")</p>
+            </div>
+            <div class="config-steps">
+                <h4>🔧 HOW TO FIX</h4>
+                <ol>
+                    <li>Open <strong>Azure Portal</strong> → your Application Insights resource</li>
+                    <li>Go to <strong>Configure → API Access</strong></li>
+                    <li>Click <strong>Create API key</strong>, enable <strong>Read telemetry</strong></li>
+                    <li>Copy the generated key</li>
+                    <li>Set the environment variable: <code>azd env set APP_INSIGHTS_API_KEY &lt;your-key&gt;</code></li>
+                    <li>Redeploy: <code>azd up</code></li>
+                </ol>
+            </div>
+        </div>
+    }
+
     @if (isLoading)
     {
         <div class="retro-loading">

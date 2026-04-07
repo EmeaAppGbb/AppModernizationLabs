@@ -19,7 +19,15 @@ public sealed class AppInsightsService
 
     private string AppId => _config["AppInsights:AppId"] ?? string.Empty;
     private string ApiKey => _config["AppInsights:ApiKey"] ?? string.Empty;
-    private bool IsConfigured => !string.IsNullOrEmpty(AppId) && !string.IsNullOrEmpty(ApiKey);
+
+    /// <summary>True when both AppId and ApiKey are configured.</summary>
+    public bool IsConfigured => !string.IsNullOrEmpty(AppId) && !string.IsNullOrEmpty(ApiKey);
+
+    /// <summary>True when AppId is present (even if ApiKey is missing).</summary>
+    public bool HasAppId => !string.IsNullOrEmpty(AppId);
+
+    /// <summary>True when ApiKey is present (even if AppId is missing).</summary>
+    public bool HasApiKey => !string.IsNullOrEmpty(ApiKey);
 
     public AppInsightsService(
         IHttpClientFactory httpClientFactory,
@@ -31,6 +39,40 @@ public sealed class AppInsightsService
         _cache = cache;
         _config = config;
         _logger = logger;
+    }
+
+    /// <summary>Log configuration state at startup for diagnostics.</summary>
+    public void LogConfigurationStatus()
+    {
+        _logger.LogInformation(
+            "App Insights configuration — IsConfigured: {IsConfigured}, AppId present: {HasAppId}, ApiKey present: {HasApiKey}",
+            IsConfigured, HasAppId, HasApiKey);
+
+        if (HasAppId)
+            _logger.LogInformation("App Insights AppId: {AppId}", AppId);
+
+        if (!IsConfigured)
+            _logger.LogWarning(
+                "App Insights is NOT fully configured. Dashboard will show empty data. " +
+                "Ensure both AppInsights:AppId and AppInsights:ApiKey are set.");
+    }
+
+    /// <summary>Run a simple test query to verify connectivity. Returns pageView count (7d) or -1 on failure.</summary>
+    public async Task<long> TestConnectionAsync()
+    {
+        if (!IsConfigured) return -1;
+
+        try
+        {
+            var results = await RunKustoQueryAsync<PageViewMetric>(
+                "pageViews | where timestamp >= ago(7d) | summarize ViewCount = count()");
+            return results.FirstOrDefault()?.ViewCount ?? 0;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "App Insights test query failed.");
+            return -1;
+        }
     }
 
     // ── Page Views ──────────────────────────────────────────────
@@ -257,6 +299,9 @@ public sealed class AppInsightsService
     }
 
     // ── Kusto Queries ───────────────────────────────────────────
+    // Event names must match what telemetry.js / script.js actually sends:
+    //   LabCardClick, StartMenuOpen, CloneClick, VSCodeOpen, CodespaceOpen,
+    //   VideoPlay, ShareClick, StarClick, GitHubOpen, FilterChange, Search, ThemeToggle
 
     private static class KustoQueries
     {
@@ -304,45 +349,63 @@ public sealed class AppInsightsService
             | summarize Count = count() by Name = client_Browser
             | top 10 by Count desc";
 
+        // Uses LabCardClick (has labTitle) + StartMenuOpen (has labTitle) for per-lab ranking.
+        // Action-level clicks (CloneClick etc.) only have repoUrl, not labTitle,
+        // so per-lab action breakdown is not possible until telemetry.js adds labTitle to those events.
         public const string TopLabClicks = @"
             customEvents
-            | where timestamp >= ago(30d) and name == 'LabClick'
-            | extend LabName = tostring(customDimensions.labName)
+            | where timestamp >= ago(30d) and name in ('LabCardClick', 'StartMenuOpen')
+            | extend LabName = tostring(customDimensions.labTitle)
+            | where isnotempty(LabName)
             | summarize ClickCount = count(),
-                CloneClicks = countif(tostring(customDimensions.action) == 'clone'),
-                VsCodeClicks = countif(tostring(customDimensions.action) == 'vscode'),
-                CodespaceClicks = countif(tostring(customDimensions.action) == 'codespace'),
-                StarClicks = countif(tostring(customDimensions.action) == 'star')
+                CloneClicks = tolong(0),
+                VsCodeClicks = tolong(0),
+                CodespaceClicks = tolong(0),
+                StarClicks = tolong(0)
               by LabName
             | top 20 by ClickCount desc";
 
+        // Overall action counts across all labs
         public const string LabActionBreakdown = @"
             customEvents
-            | where timestamp >= ago(30d) and name in ('LabClick', 'StartMenuInteraction')
+            | where timestamp >= ago(30d) and name in ('CloneClick', 'VSCodeOpen', 'CodespaceOpen', 'StarClick', 'StartMenuOpen')
             | summarize
-                CloneClicks = countif(tostring(customDimensions.action) == 'clone'),
-                VsCodeClicks = countif(tostring(customDimensions.action) == 'vscode'),
-                CodespaceClicks = countif(tostring(customDimensions.action) == 'codespace'),
-                StarClicks = countif(tostring(customDimensions.action) == 'star'),
-                StartMenuInteractions = countif(name == 'StartMenuInteraction')";
+                CloneClicks = countif(name == 'CloneClick'),
+                VsCodeClicks = countif(name == 'VSCodeOpen'),
+                CodespaceClicks = countif(name == 'CodespaceOpen'),
+                StarClicks = countif(name == 'StarClick'),
+                StartMenuInteractions = countif(name == 'StartMenuOpen')";
 
+        // FilterChange event has filterType + value (not filterName/filterValue)
         public const string FilterUsage = @"
             customEvents
-            | where timestamp >= ago(30d) and name == 'FilterApplied'
-            | extend FilterName = tostring(customDimensions.filterName),
-                     FilterValue = tostring(customDimensions.filterValue)
+            | where timestamp >= ago(30d) and name == 'FilterChange'
+            | extend FilterName = tostring(customDimensions.filterType),
+                     FilterValue = tostring(customDimensions.value)
             | summarize UsageCount = count() by FilterName, FilterValue
             | top 20 by UsageCount desc";
 
+        // Fixed: avg(session_Id) was invalid — session_Id is a string.
+        // Computes per-session duration from event timestamps, then aggregates daily.
         public const string SessionsOverTime = @"
-            union (pageViews), (customEvents)
-            | where timestamp >= ago(30d)
-            | summarize
-                SessionCount = dcount(session_Id),
-                AvgSessionDurationSeconds = avg(session_Id),
-                NewUsers = dcountif(user_Id, itemType == 'pageView'),
-                ReturningUsers = dcountif(user_Id, itemType == 'customEvent')
-              by bin(timestamp, 1d)
+            let sessions = union (pageViews), (customEvents)
+                | where timestamp >= ago(30d)
+                | summarize SessionStart = min(timestamp), SessionEnd = max(timestamp) by session_Id
+                | extend DurationSec = datetime_diff('second', SessionEnd, SessionStart)
+                | extend Day = startofday(SessionStart);
+            let dailyDurations = sessions
+                | summarize AvgSessionDurationSeconds = avg(toreal(DurationSec)), SessionCount = dcount(session_Id) by Day;
+            let dailyUsers = union (pageViews), (customEvents)
+                | where timestamp >= ago(30d)
+                | summarize
+                    NewUsers = dcountif(user_Id, itemType == 'pageView'),
+                    ReturningUsers = dcountif(user_Id, itemType == 'customEvent')
+                  by Day = startofday(timestamp);
+            dailyDurations
+            | join kind=leftouter dailyUsers on Day
+            | project timestamp = Day, SessionCount, AvgSessionDurationSeconds,
+                      NewUsers = coalesce(NewUsers, tolong(0)),
+                      ReturningUsers = coalesce(ReturningUsers, tolong(0))
             | order by timestamp asc";
 
         public const string ThemePreference = @"
@@ -359,33 +422,35 @@ public sealed class AppInsightsService
             | summarize Count = count() by Query = SearchQuery
             | top 20 by Count desc";
 
+        // VideoPlay event has videoUrl + labTitle (not videoId/videoTitle/labName)
         public const string VideoPlayEvents = @"
             customEvents
-            | where timestamp >= ago(30d) and name in ('VideoPlay', 'VideoPause', 'VideoComplete')
-            | extend LabName = tostring(customDimensions.labName),
-                     VideoId = tostring(customDimensions.videoId),
-                     VideoTitle = tostring(customDimensions.videoTitle)
+            | where timestamp >= ago(30d) and name == 'VideoPlay'
+            | extend LabName = tostring(customDimensions.labTitle),
+                     VideoId = tostring(customDimensions.videoUrl),
+                     VideoTitle = tostring(customDimensions.videoUrl)
             | summarize
-                PlayCount = countif(name == 'VideoPlay'),
-                PauseCount = countif(name == 'VideoPause'),
-                CompleteCount = countif(name == 'VideoComplete'),
-                AvgWatchTimeSeconds = avg(todouble(customDimensions.watchTimeSeconds))
+                PlayCount = count(),
+                PauseCount = tolong(0),
+                CompleteCount = tolong(0),
+                AvgWatchTimeSeconds = 0.0
               by LabName, VideoId, VideoTitle
             | order by PlayCount desc";
 
         public const string MostWatchedVideos = @"
             customEvents
             | where timestamp >= ago(30d) and name == 'VideoPlay'
-            | extend LabName = tostring(customDimensions.labName),
-                     VideoId = tostring(customDimensions.videoId),
-                     VideoTitle = tostring(customDimensions.videoTitle)
+            | extend LabName = tostring(customDimensions.labTitle),
+                     VideoId = tostring(customDimensions.videoUrl),
+                     VideoTitle = tostring(customDimensions.videoUrl)
             | summarize PlayCount = count() by LabName, VideoId, VideoTitle
             | top 10 by PlayCount desc";
 
+        // ShareClick event has labTitle + shareMethod (not labName)
         public const string SharesByLab = @"
             customEvents
-            | where timestamp >= ago(30d) and name == 'ShareLab'
-            | extend LabName = tostring(customDimensions.labName),
+            | where timestamp >= ago(30d) and name == 'ShareClick'
+            | extend LabName = tostring(customDimensions.labTitle),
                      Method = tostring(customDimensions.shareMethod)
             | summarize
                 ShareCount = count(),
@@ -396,11 +461,11 @@ public sealed class AppInsightsService
 
         public const string ShareConversions = @"
             customEvents
-            | where timestamp >= ago(30d) and name in ('ShareLab', 'SharedLinkVisit')
-            | extend LabName = tostring(customDimensions.labName)
+            | where timestamp >= ago(30d) and name == 'ShareClick'
+            | extend LabName = tostring(customDimensions.labTitle)
             | summarize
-                Shares = countif(name == 'ShareLab'),
-                ResultingVisits = countif(name == 'SharedLinkVisit')
+                Shares = count(),
+                ResultingVisits = tolong(0)
               by LabName
             | where Shares > 0
             | order by Shares desc";

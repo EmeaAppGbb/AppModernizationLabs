@@ -1,0 +1,140 @@
+@page "/status"
+@using Dashboard.Services
+@inject AppInsightsService AppInsights
+@inject YouTubeAnalyticsService YouTube
+@rendermode InteractiveServer
+
+<PageTitle>System Status</PageTitle>
+
+<div class="dashboard-grid">
+    <div class="retro-card retro-card-wide">
+        <h3 class="card-title">🔧 CONFIGURATION STATUS</h3>
+        <div class="retro-table-wrap">
+            <table class="retro-table">
+                <thead>
+                    <tr>
+                        <th>SERVICE</th>
+                        <th>STATUS</th>
+                        <th>DETAILS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>App Insights — AppId</td>
+                        <td class="@(AppInsights.HasAppId ? "status-ok" : "status-fail")">
+                            @(AppInsights.HasAppId ? "✅ SET" : "❌ MISSING")
+                        </td>
+                        <td>Environment variable: <code>AppInsights__AppId</code></td>
+                    </tr>
+                    <tr>
+                        <td>App Insights — ApiKey</td>
+                        <td class="@(AppInsights.HasApiKey ? "status-ok" : "status-fail")">
+                            @(AppInsights.HasApiKey ? "✅ SET" : "❌ MISSING")
+                        </td>
+                        <td>Environment variable: <code>AppInsights__ApiKey</code></td>
+                    </tr>
+                    <tr>
+                        <td>App Insights — Overall</td>
+                        <td class="@(AppInsights.IsConfigured ? "status-ok" : "status-fail")">
+                            @(AppInsights.IsConfigured ? "✅ READY" : "❌ NOT CONFIGURED")
+                        </td>
+                        <td>Both AppId and ApiKey required for API queries</td>
+                    </tr>
+                    <tr>
+                        <td>YouTube API</td>
+                        <td class="@(YouTube.IsConfigured ? "status-ok" : "status-warn")">
+                            @(YouTube.IsConfigured ? "✅ SET" : "⚠️ OPTIONAL — NOT SET")
+                        </td>
+                        <td>Environment variable: <code>YouTube__ApiKey</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="retro-card retro-card-wide">
+        <h3 class="card-title">🧪 CONNECTION TEST</h3>
+        @if (isTesting)
+        {
+            <div class="retro-loading">
+                <div class="loading-spinner"></div>
+                <p>RUNNING TEST QUERY...</p>
+            </div>
+        }
+        else if (testResult.HasValue)
+        {
+            <div class="retro-table-wrap">
+                <table class="retro-table">
+                    <thead>
+                        <tr>
+                            <th>TEST</th>
+                            <th>RESULT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Page views (last 7 days)</td>
+                            <td class="@(testResult.Value >= 0 ? "status-ok" : "status-fail")">
+                                @if (testResult.Value >= 0)
+                                {
+                                    <span>✅ @testResult.Value.ToString("N0") page views</span>
+                                }
+                                else
+                                {
+                                    <span>❌ Query failed — check AppId and ApiKey</span>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>Click the button below to test the App Insights API connection.</p>
+        }
+        <button class="retro-btn" @onclick="RunTest" disabled="@(!AppInsights.IsConfigured || isTesting)">
+            @(AppInsights.IsConfigured ? "RUN TEST QUERY" : "CONFIGURE APP INSIGHTS FIRST")
+        </button>
+    </div>
+
+    @if (!AppInsights.IsConfigured)
+    {
+        <div class="retro-card retro-card-warning retro-card-wide">
+            <h3 class="card-title">📋 SETUP GUIDE</h3>
+            <div class="config-steps">
+                <ol>
+                    <li>Open <strong>Azure Portal</strong> → your Application Insights resource</li>
+                    <li>Find the <strong>Application ID</strong> on the Overview blade (or API Access page) — this is the AppId</li>
+                    <li>Go to <strong>Configure → API Access</strong></li>
+                    <li>Click <strong>Create API key</strong>, enable <strong>Read telemetry</strong></li>
+                    <li>Copy the generated key — this is the ApiKey</li>
+                    <li>Set environment variables:
+                        <pre>azd env set APP_INSIGHTS_API_KEY &lt;your-api-key&gt;</pre>
+                    </li>
+                    <li>Redeploy: <code>azd up</code></li>
+                </ol>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isTesting;
+    private long? testResult;
+
+    private async Task RunTest()
+    {
+        isTesting = true;
+        StateHasChanged();
+
+        try
+        {
+            testResult = await AppInsights.TestConnectionAsync();
+        }
+        finally
+        {
+            isTesting = false;
+        }
+    }
+}
