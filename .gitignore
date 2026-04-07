@@ -4,6 +4,10 @@ node_modules/
 # Environment variables
 .env
 
+# Build outputs
+bin/
+obj/
+
 # Squad: ignore runtime state (logs, inbox, sessions)
 .squad/orchestration-log/
 .squad/log/

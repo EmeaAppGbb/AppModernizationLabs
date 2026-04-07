@@ -128,3 +128,25 @@
 - `appsettings.json` keeps the empty `ApiKey` field for backward compatibility, but code no longer reads it
 - Container App needs system-assigned Managed Identity with "Monitoring Reader" role on the App Insights resource (Chunk handles Bicep side)
 
+### AppId Mismatch Fix — Connection String Fallback
+
+**Date:** 2025-07-19  
+**Problem:** Dashboard showed zero data locally despite App Insights having 42 pageViews, 27 custom events, and more. Status page showed green (token acquired, config present).
+
+**Root cause:** Two different App IDs existed in user-secrets:
+- `AppInsights:AppId = 58c3fdb7-...` — from `az monitor app-insights component show` — pointed to a component with ZERO data
+- `APP_INSIGHTS_APP_ID = f92383fe-...` — from AZD env (Bicep output) — pointed to the component with ALL the data
+
+The code read `AppInsights:AppId` which was wrong. The correct ID was `f92383fe-...` from the Bicep-provisioned component.
+
+**Diagnosis method:** Tested both App IDs directly against `api.applicationinsights.io` REST API with `az account get-access-token`. AppId1 returned `ViewCount=0`, AppId2 returned `ViewCount=42`. Case closed.
+
+**Fixes applied:**
+1. Fixed user-secrets: `AppInsights:AppId` set to correct value `f92383fe-...`
+2. Added `ResolveAppId()` method that prefers `ApplicationId` embedded in the connection string (always authoritative from Azure) before falling back to explicit `AppInsights:AppId`
+3. Enhanced startup logging to show which source the AppId was resolved from
+
+**Key lesson:** The App Insights connection string contains `ApplicationId=...` which is always the correct REST API App ID. Don't rely solely on manually-configured `AppInsights:AppId` — it can be set to the wrong component. The connection string is the single source of truth.
+
+**Production note:** Deployed Container App was NOT affected — Bicep correctly passes `appInsights.outputs.appId` to `AppInsights__AppId` env var. This was a local-dev-only misconfiguration, but the connection string fallback now prevents it everywhere.
+
