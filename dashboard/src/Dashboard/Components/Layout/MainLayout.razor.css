@@ -1,16 +1,3 @@
-::deep .retro-app {
-    display: flex;
-    min-height: 100vh;
-}
-
-::deep .retro-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    margin-left: 260px;
-}
-
 ::deep .retro-topbar {
     display: flex;
     align-items: center;
@@ -42,10 +29,6 @@
 }
 
 @media (max-width: 768px) {
-    ::deep .retro-main {
-        margin-left: 0;
-    }
-
     ::deep .mobile-menu-toggle {
         display: block;
     }
