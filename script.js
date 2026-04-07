@@ -569,7 +569,7 @@
 
     // Mobile sidebar
     mobileFilterToggle.addEventListener('click', openSidebar);
-    sidebarClose.addEventListener('click', closeSidebar);
+    if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
     sidebarOverlay.addEventListener('click', closeSidebar);
 
     // Outside click
