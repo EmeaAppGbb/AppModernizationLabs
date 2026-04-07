@@ -89,4 +89,5 @@
 - GitHub Actions workflow `deploy-dashboard.yml` — triggers on dashboard/ or infra/ changes to main, plus manual dispatch
 - Workflow: Azure login → azd provision → Docker build+push to ACR → azd deploy → summary output
 - ACR uses admin credentials; Container App pulls via registry secret
+- **Managed Identity migration (API Key deprecation):** Replaced App Insights API Key auth with system-assigned Managed Identity on the Container App. Monitoring Reader role assigned on the App Insights resource via Bicep role assignment. Removed `appInsightsApiKey` parameter, `app-insights-api-key` secret, and `AppInsights__ApiKey` env var from all Bicep files, parameters, and workflows. Added `AppInsights__UseManagedIdentity=true` env var so app code can detect MI auth is available. The `APP_INSIGHTS_API_KEY` secret in GitHub can be deleted.
 

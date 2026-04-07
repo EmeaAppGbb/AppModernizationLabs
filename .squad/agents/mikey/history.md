@@ -109,3 +109,22 @@
 
 **Key lesson:** KQL queries must be validated against the actual telemetry code (`script.js` / `telemetry.js`). Event names and property keys are a contract between frontend instrumentation and backend queries.
 
+### Managed Identity Migration — App Insights API Auth
+
+**Date:** 2025-07-18  
+**Context:** Application Insights API Keys are deprecated (retiring March 2026). Migrated dashboard from API Key auth to Azure AD (Entra ID) Managed Identity auth via `DefaultAzureCredential`.
+
+**Changes applied:**
+1. **`Azure.Identity` NuGet package** added to `Dashboard.csproj`
+2. **`AppInsightsService.cs`** — replaced `x-api-key` header with `Authorization: Bearer {token}` using `DefaultAzureCredential`. Token scope: `https://api.applicationinsights.io/.default`. Removed `ApiKey` property and `HasApiKey`. `IsConfigured` now only checks `AppId`.
+3. **`Status.razor`** — replaced ApiKey config row with Managed Identity auth info + live token acquisition test
+4. **`Home.razor`** — updated config guide to reference Managed Identity instead of API Key creation
+5. **All page warning banners** (PageViews, LabEngagement, VideoMetrics, UserActivity, ShareMetrics) — updated text to mention Managed Identity instead of ApiKey
+6. **`Program.cs`** — no changes needed; it calls `LogConfigurationStatus()` which was updated in the service
+
+**Key details:**
+- `DefaultAzureCredential` handles token caching internally — no manual token management needed
+- Fallback chain: Managed Identity → Azure CLI → VS Code → environment variables (great for local dev)
+- `appsettings.json` keeps the empty `ApiKey` field for backward compatibility, but code no longer reads it
+- Container App needs system-assigned Managed Identity with "Monitoring Reader" role on the App Insights resource (Chunk handles Bicep side)
+

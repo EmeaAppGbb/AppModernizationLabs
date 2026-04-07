@@ -29,10 +29,6 @@ param appInsightsConnectionString string
 @description('Application Insights App ID for API queries')
 param appInsightsAppId string
 
-@description('Application Insights API key for REST API queries')
-@secure()
-param appInsightsApiKey string
-
 @description('YouTube Data API key (optional)')
 param youtubeApiKey string = ''
 
@@ -67,6 +63,9 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
   name: name
   location: location
   tags: tags
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     managedEnvironmentId: containerAppEnvId
     configuration: {
@@ -92,10 +91,6 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           name: 'app-insights-connection-string'
           value: appInsightsConnectionString
         }
-        {
-          name: 'app-insights-api-key'
-          value: appInsightsApiKey
-        }
       ]
     }
     template: {
@@ -117,8 +112,8 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
               value: appInsightsAppId
             }
             {
-              name: 'AppInsights__ApiKey'
-              secretRef: 'app-insights-api-key'
+              name: 'AppInsights__UseManagedIdentity'
+              value: 'true'
             }
             {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
@@ -164,3 +159,6 @@ output name string = containerApp.name
 
 @description('The resource ID of the Container App')
 output id string = containerApp.id
+
+@description('The principal ID of the system-assigned Managed Identity')
+output principalId string = containerApp.identity.principalId

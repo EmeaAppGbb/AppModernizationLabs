@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Azure.Core;
+using Azure.Identity;
 using Dashboard.Models;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -8,6 +10,7 @@ namespace Dashboard.Services;
 /// <summary>
 /// Queries Application Insights REST API to fetch telemetry data for the gallery site.
 /// Uses Kusto (KQL) queries to pull custom events, page views, and session data.
+/// Authenticates via Azure AD (Managed Identity) using DefaultAzureCredential.
 /// </summary>
 public sealed class AppInsightsService
 {
@@ -15,19 +18,18 @@ public sealed class AppInsightsService
     private readonly IMemoryCache _cache;
     private readonly IConfiguration _config;
     private readonly ILogger<AppInsightsService> _logger;
+    private readonly DefaultAzureCredential _credential = new();
     private readonly TimeSpan _cacheTtl = TimeSpan.FromMinutes(5);
 
+    private static readonly string[] TokenScopes = ["https://api.applicationinsights.io/.default"];
+
     private string AppId => _config["AppInsights:AppId"] ?? string.Empty;
-    private string ApiKey => _config["AppInsights:ApiKey"] ?? string.Empty;
 
-    /// <summary>True when both AppId and ApiKey are configured.</summary>
-    public bool IsConfigured => !string.IsNullOrEmpty(AppId) && !string.IsNullOrEmpty(ApiKey);
+    /// <summary>True when AppId is configured (Managed Identity handles auth automatically).</summary>
+    public bool IsConfigured => HasAppId;
 
-    /// <summary>True when AppId is present (even if ApiKey is missing).</summary>
+    /// <summary>True when AppId is present.</summary>
     public bool HasAppId => !string.IsNullOrEmpty(AppId);
-
-    /// <summary>True when ApiKey is present (even if AppId is missing).</summary>
-    public bool HasApiKey => !string.IsNullOrEmpty(ApiKey);
 
     public AppInsightsService(
         IHttpClientFactory httpClientFactory,
@@ -45,16 +47,35 @@ public sealed class AppInsightsService
     public void LogConfigurationStatus()
     {
         _logger.LogInformation(
-            "App Insights configuration — IsConfigured: {IsConfigured}, AppId present: {HasAppId}, ApiKey present: {HasApiKey}",
-            IsConfigured, HasAppId, HasApiKey);
+            "App Insights configuration — IsConfigured: {IsConfigured}, AppId present: {HasAppId}, Auth: Managed Identity (DefaultAzureCredential)",
+            IsConfigured, HasAppId);
 
         if (HasAppId)
             _logger.LogInformation("App Insights AppId: {AppId}", AppId);
 
         if (!IsConfigured)
             _logger.LogWarning(
-                "App Insights is NOT fully configured. Dashboard will show empty data. " +
-                "Ensure both AppInsights:AppId and AppInsights:ApiKey are set.");
+                "App Insights is NOT configured. Dashboard will show empty data. " +
+                "Ensure AppInsights:AppId is set. Auth uses Managed Identity (no API key needed).");
+    }
+
+    /// <summary>
+    /// Test acquiring an Azure AD token for App Insights. Returns true on success.
+    /// Used by the Status page to verify Managed Identity is working.
+    /// </summary>
+    public async Task<(bool Success, string Message)> TestTokenAcquisitionAsync()
+    {
+        try
+        {
+            var tokenResult = await _credential.GetTokenAsync(
+                new TokenRequestContext(TokenScopes));
+            return (true, $"Token acquired, expires {tokenResult.ExpiresOn:u}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to acquire Azure AD token for App Insights.");
+            return (false, ex.Message);
+        }
     }
 
     /// <summary>Run a simple test query to verify connectivity. Returns pageView count (7d) or -1 on failure.</summary>
@@ -209,8 +230,12 @@ public sealed class AppInsightsService
 
         try
         {
+            var tokenResult = await _credential.GetTokenAsync(
+                new TokenRequestContext(TokenScopes));
+
             var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", tokenResult.Token);
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 

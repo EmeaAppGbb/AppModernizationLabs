@@ -8,9 +8,6 @@
     "location": {
       "value": "${AZURE_LOCATION}"
     },
-    "appInsightsApiKey": {
-      "value": "${APP_INSIGHTS_API_KEY}"
-    },
     "youtubeApiKey": {
       "value": "${YOUTUBE_API_KEY}"
     },

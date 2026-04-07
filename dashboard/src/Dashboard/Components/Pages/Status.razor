@@ -27,18 +27,39 @@
                         <td>Environment variable: <code>AppInsights__AppId</code></td>
                     </tr>
                     <tr>
-                        <td>App Insights — ApiKey</td>
-                        <td class="@(AppInsights.HasApiKey ? "status-ok" : "status-fail")">
-                            @(AppInsights.HasApiKey ? "✅ SET" : "❌ MISSING")
+                        <td>App Insights — Auth</td>
+                        <td class="status-ok">🔐 MANAGED IDENTITY</td>
+                        <td>Uses <code>DefaultAzureCredential</code> (Managed Identity → Azure CLI → VS Code fallback)</td>
+                    </tr>
+                    <tr>
+                        <td>App Insights — Token</td>
+                        <td class="@(tokenTestResult.HasValue ? (tokenTestResult.Value.Success ? "status-ok" : "status-fail") : "status-warn")">
+                            @if (tokenTestResult.HasValue)
+                            {
+                                @(tokenTestResult.Value.Success ? "✅ ACQUIRED" : "❌ FAILED")
+                            }
+                            else
+                            {
+                                <span>⏳ NOT TESTED</span>
+                            }
                         </td>
-                        <td>Environment variable: <code>AppInsights__ApiKey</code></td>
+                        <td>
+                            @if (tokenTestResult.HasValue)
+                            {
+                                @tokenTestResult.Value.Message
+                            }
+                            else
+                            {
+                                <span>Run connection test below to verify token acquisition</span>
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td>App Insights — Overall</td>
                         <td class="@(AppInsights.IsConfigured ? "status-ok" : "status-fail")">
                             @(AppInsights.IsConfigured ? "✅ READY" : "❌ NOT CONFIGURED")
                         </td>
-                        <td>Both AppId and ApiKey required for API queries</td>
+                        <td>AppId required; auth via Managed Identity</td>
                     </tr>
                     <tr>
                         <td>YouTube API</td>
@@ -73,6 +94,19 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <td>Azure AD Token</td>
+                            <td class="@(tokenTestResult?.Success == true ? "status-ok" : "status-fail")">
+                                @if (tokenTestResult?.Success == true)
+                                {
+                                    <span>✅ @tokenTestResult.Value.Message</span>
+                                }
+                                else
+                                {
+                                    <span>❌ @(tokenTestResult?.Message ?? "Token not acquired")</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Page views (last 7 days)</td>
                             <td class="@(testResult.Value >= 0 ? "status-ok" : "status-fail")">
                                 @if (testResult.Value >= 0)
@@ -81,7 +115,7 @@
                                 }
                                 else
                                 {
-                                    <span>❌ Query failed — check AppId and ApiKey</span>
+                                    <span>❌ Query failed — check AppId and Managed Identity permissions</span>
                                 }
                             </td>
                         </tr>
@@ -91,7 +125,7 @@
         }
         else
         {
-            <p>Click the button below to test the App Insights API connection.</p>
+            <p>Click the button below to test the App Insights API connection via Managed Identity.</p>
         }
         <button class="retro-btn" @onclick="RunTest" disabled="@(!AppInsights.IsConfigured || isTesting)">
             @(AppInsights.IsConfigured ? "RUN TEST QUERY" : "CONFIGURE APP INSIGHTS FIRST")
@@ -106,14 +140,14 @@
                 <ol>
                     <li>Open <strong>Azure Portal</strong> → your Application Insights resource</li>
                     <li>Find the <strong>Application ID</strong> on the Overview blade (or API Access page) — this is the AppId</li>
-                    <li>Go to <strong>Configure → API Access</strong></li>
-                    <li>Click <strong>Create API key</strong>, enable <strong>Read telemetry</strong></li>
-                    <li>Copy the generated key — this is the ApiKey</li>
-                    <li>Set environment variables:
-                        <pre>azd env set APP_INSIGHTS_API_KEY &lt;your-api-key&gt;</pre>
+                    <li>Ensure the Container App has a <strong>system-assigned Managed Identity</strong> enabled</li>
+                    <li>Assign the <strong>Monitoring Reader</strong> role on the App Insights resource to the Managed Identity</li>
+                    <li>Set the AppId environment variable:
+                        <pre>azd env set APP_INSIGHTS_APP_ID &lt;your-app-id&gt;</pre>
                     </li>
                     <li>Redeploy: <code>azd up</code></li>
                 </ol>
+                <p><em>No API key needed — authentication is handled by Managed Identity.</em></p>
             </div>
         </div>
     }
@@ -122,6 +156,7 @@
 @code {
     private bool isTesting;
     private long? testResult;
+    private (bool Success, string Message)? tokenTestResult;
 
     private async Task RunTest()
     {
@@ -130,6 +165,7 @@
 
         try
         {
+            tokenTestResult = await AppInsights.TestTokenAcquisitionAsync();
             testResult = await AppInsights.TestConnectionAsync();
         }
         finally

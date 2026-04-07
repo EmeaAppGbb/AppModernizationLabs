@@ -41,7 +41,6 @@ jobs:
                          --tenant-id "${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}"
           azd env new "${{ env.AZURE_ENV_NAME }}" --location "${{ env.AZURE_LOCATION }}" --subscription "${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}" --no-prompt || true
           azd env select "${{ env.AZURE_ENV_NAME }}" || true
-          azd env set APP_INSIGHTS_API_KEY "${{ secrets.APP_INSIGHTS_API_KEY }}"
           azd env set YOUTUBE_API_KEY "${{ secrets.YOUTUBE_API_KEY }}"
           azd env set YOUTUBE_CHANNEL_ID "${{ secrets.YOUTUBE_CHANNEL_ID }}"
           azd provision --no-prompt
