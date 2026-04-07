@@ -23,7 +23,32 @@ public sealed class AppInsightsService
 
     private static readonly string[] TokenScopes = ["https://api.applicationinsights.io/.default"];
 
-    private string AppId => _config["AppInsights:AppId"] ?? string.Empty;
+    private string AppId => ResolveAppId();
+
+    /// <summary>
+    /// Resolves the App ID by preferring the ApplicationId embedded in the connection
+    /// string (always matches the data store), falling back to explicit AppId config.
+    /// </summary>
+    private string ResolveAppId()
+    {
+        // Prefer: extract ApplicationId from the connection string (always correct)
+        var connStr = _config["AppInsights:ConnectionString"]
+                   ?? _config["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+                   ?? string.Empty;
+        foreach (var part in connStr.Split(';', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var kv = part.Split('=', 2);
+            if (kv.Length == 2 && kv[0].Equals("ApplicationId", StringComparison.OrdinalIgnoreCase))
+                return kv[1];
+        }
+
+        // Fall back to explicit config
+        var configuredId = _config["AppInsights:AppId"];
+        if (!string.IsNullOrEmpty(configuredId))
+            return configuredId;
+
+        return string.Empty;
+    }
 
     /// <summary>True when AppId is configured (Managed Identity handles auth automatically).</summary>
     public bool IsConfigured => HasAppId;
@@ -46,12 +71,16 @@ public sealed class AppInsightsService
     /// <summary>Log configuration state at startup for diagnostics.</summary>
     public void LogConfigurationStatus()
     {
+        var configuredId = _config["AppInsights:AppId"] ?? string.Empty;
+        var resolvedId = AppId;
+        var source = !string.IsNullOrEmpty(configuredId) ? "AppInsights:AppId" : "ConnectionString fallback";
+
         _logger.LogInformation(
-            "App Insights configuration — IsConfigured: {IsConfigured}, AppId present: {HasAppId}, Auth: Managed Identity (DefaultAzureCredential)",
-            IsConfigured, HasAppId);
+            "App Insights configuration — IsConfigured: {IsConfigured}, AppId present: {HasAppId}, AppId source: {Source}, Auth: Managed Identity (DefaultAzureCredential)",
+            IsConfigured, HasAppId, source);
 
         if (HasAppId)
-            _logger.LogInformation("App Insights AppId: {AppId}", AppId);
+            _logger.LogInformation("App Insights AppId: {AppId}", resolvedId);
 
         if (!IsConfigured)
             _logger.LogWarning(
