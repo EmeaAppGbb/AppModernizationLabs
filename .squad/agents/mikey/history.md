@@ -87,3 +87,25 @@
 - Kusto queries capture domain-specific metrics: page views by category, video engagement, share impact, user activity patterns
 - Targeting net9.0 with TODO markers for net10.0 upgrade when GA
 
+### Dashboard Zero-Data Fix — KQL Event Mismatch & Diagnostics
+
+**Date:** 2025-07-16  
+**Problem:** Dashboard deployed on Azure Container Apps showed zero data despite Application Insights having data.
+
+**Root causes found (multiple):**
+1. **Missing API key** — `AppInsights:ApiKey` was empty because the Bicep `Microsoft.Insights/components/apikeys` resource was removed (create-only, can't redeploy). User never created one manually.
+2. **KQL event names wrong** — Every customEvents query used wrong event names vs what `script.js` actually sends. Examples: `LabClick` should be `LabCardClick`, `ShareLab` should be `ShareClick`, `FilterApplied` should be `FilterChange`, `StartMenuInteraction` should be `StartMenuOpen`. Action events (CloneClick, VSCodeOpen, etc.) were incorrectly modeled as a single `LabClick` event with an `action` dimension.
+3. **`avg(session_Id)` bug** — SessionsOverTime query tried to average a string field. Fixed with proper `datetime_diff` on per-session timestamps.
+4. **No diagnostics** — When `IsConfigured` was false, the dashboard silently showed zeros. No way to distinguish "no data" from "not configured."
+
+**Fixes applied:**
+- All 12 KQL queries corrected to match actual telemetry event names and property keys
+- Session duration calculated properly using per-session min/max timestamps
+- `IsConfigured`, `HasAppId`, `HasApiKey` made public for UI consumption
+- Startup logging added to `Program.cs` for container log inspection
+- `/status` diagnostic page with config checklist and live test query
+- Warning banners on all pages when not configured
+- Configuration guide card on Home page
+
+**Key lesson:** KQL queries must be validated against the actual telemetry code (`script.js` / `telemetry.js`). Event names and property keys are a contract between frontend instrumentation and backend queries.
+

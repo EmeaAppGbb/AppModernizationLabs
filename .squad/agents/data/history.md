@@ -9,6 +9,7 @@
 
 <!-- Append new learnings below. Each entry is something lasting about the project. -->
 - **Rename:** Project renamed from "App Modernization Labs" to "Agentic Application Enablement Labs". Short form in header: "AGENTIC LABS". Tagline: "Level Up Your Repos 🎮".
+- **Blazor CSS isolation pitfall:** In `MainLayout.razor.css`, `::deep .retro-app` compiles to `[b-hash] .retro-app` — a descendant selector. But `.retro-app` IS the component's root element (it carries the `b-hash` attribute), so the selector never matches itself. Layout-critical styles for the root element and its structural children (`.retro-app`, `.retro-main`) must go in global CSS (`retro-dashboard.css`), not in scoped CSS. Only true descendants (`.retro-topbar`, `.topbar-title`, `.retro-content`, `.mobile-menu-toggle`) work correctly with `::deep`.
 - **Telemetry:** `telemetry.js` wraps Azure Application Insights SDK (`@microsoft/applicationinsights-web` via CDN `ai.3.gbl.min.js`). Exposes `window.telemetry.trackEvent(name, props)` globally; gracefully no-ops when connection string is empty.
 - **App Insights config:** Connection string is set via `window.APP_INSIGHTS_CONNECTION_STRING` — a deployment-time variable. Placeholder in `index.html` allows injection during CI/CD.
 - **Telemetry events tracked:** LabCardClick, StartMenuOpen, CloneClick, VSCodeOpen, CodespaceOpen, VideoPlay, ShareClick, StarClick, GitHubOpen, FilterChange, Search, ThemeToggle — all fire from `script.js` delegated click/change handlers.
