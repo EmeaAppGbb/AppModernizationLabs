@@ -131,6 +131,99 @@ Created `docs/tasks/` with 35 self-contained Markdown briefs following a standar
 - **Eyes:** Can use acceptance criteria as review checklist.
 - **All agents:** Consistent structure makes cross-lab work predictable.
 
+### 9. YouTube Channel SVG Assets
+
+**Author:** Andy (Illustrator / Pixel Artist)  
+**Date:** 2026-04-06  
+**Status:** Implemented
+
+Created two YouTube-specific SVG assets in `assets/`:
+
+1. **`youtube-profile.svg`** (800×800) — Pixel-circle-bordered gamepad icon with "AL" text. Square canvas that survives YouTube's circle crop. Uses Bresenham algorithm for authentic pixel circle.
+
+2. **`youtube-banner.svg`** (2560×1440) — Full banner with "AGENTIC LABS" + "LEVEL UP YOUR REPOS" in pixel text, 3×3 grid logo, CRT scanline effect, and decorative pixel art (clouds, hearts, gamepads, code brackets, stars). All key content fits the 1546×423 safe zone.
+
+**Design Decisions:**
+- **Same NES palette** as all other assets: teal `#00d4aa`, pink `#ff6b9d`, gold `#ffd93d`, dark `#0f0f23`, purple `#4a4a8a`.
+- **All `<rect>` elements** — no paths, no curves, consistent with Decision #3 (SVG Pixel Art Asset Conventions).
+- **`shape-rendering="crispEdges"`** on both roots.
+- **CRT scanlines** implemented as 2px-high rects every 4px at 0.08 opacity — matches Sloth's CSS scanline approach but self-contained in SVG.
+
+**Team Impact:**
+- **Sloth/Data:** No CSS changes needed; these are standalone assets.
+- **Chunk:** If automating YouTube uploads or Open Graph tags, reference these paths.
+- **Mouth:** Can reference these assets in documentation or README when linking the YouTube channel.
+
+### 10. Clickable Badge Tags on Lab Cards
+
+**Author:** Data (Frontend Developer)  
+**Date:** 2025-07-15  
+**Status:** Implemented
+
+**Decision:**
+Made all badge tags on lab cards clickable so they activate the matching sidebar filter:
+
+- **Category badges** → set the `#categoryFilter` dropdown to the badge's value
+- **Language badges** → check the matching checkbox in `#languagesFilters`
+- **Framework badges** → check the matching checkbox in `#frameworksFilters`
+
+**Implementation:**
+1. Added `data-filter-type` and `data-filter-value` attributes to all badges in `cardHTML()`
+2. Added a delegated click handler on `galleryGrid` that reads these attributes and activates the correct filter control, then calls `applyFilters()`
+3. Added `cursor: pointer` to `.badge` in CSS to signal interactivity
+4. Page scrolls to top after filter activation for immediate feedback
+
+**Trade-offs:**
+- Language/framework badges **check** the checkbox (additive) rather than clearing other filters first. This lets users build up multi-filter combos by clicking multiple badges. Category uses a dropdown so it naturally replaces.
+- Chose event delegation from `galleryGrid` (consistent with existing click handlers) over per-badge listeners, for performance and simplicity.
+
+### 11. Move Layout-Critical Styles to Global CSS
+
+**Agent:** Data (Frontend Dev)  
+**Date:** 2025-07-18  
+**Status:** Implemented
+
+**Context:**
+The dashboard sidebar was rendering on top of the main content instead of beside it. Root cause: Blazor CSS isolation with `::deep .retro-app` compiles to `[b-hash] .retro-app` — a descendant selector. But `.retro-app` is the component's root element (it carries `b-hash` directly), so the selector never matches. This meant `display: flex` and `margin-left: 260px` never applied.
+
+**Decision:**
+Moved `.retro-app` and `.retro-main` styles (including their responsive `@media` rules) from `MainLayout.razor.css` to the global `retro-dashboard.css`. Kept only true descendant styles (`.retro-topbar`, `.topbar-title`, `.retro-content`, `.mobile-menu-toggle`) in the scoped CSS where `::deep` works correctly.
+
+**Impact:**
+- **Sloth:** Global CSS now defines `.retro-app` and `.retro-main` — keep in sync if changing layout structure.
+- **All:** Blazor scoped CSS should not be used for root-element styles in any layout component.
+
+### 12. KQL Queries Must Match Telemetry Event Contract
+
+**Author:** Mikey (Lead/Architect)  
+**Date:** 2025-07-16  
+**Status:** Active  
+
+**Context:**
+Dashboard KQL queries referenced event names (`LabClick`, `ShareLab`, `FilterApplied`, `StartMenuInteraction`) that don't match what `script.js` actually sends (`LabCardClick`, `ShareClick`, `FilterChange`, `StartMenuOpen`). This caused the entire dashboard to show zero custom-event data.
+
+**Decision:**
+1. **KQL queries are a contract with `telemetry.js`/`script.js`.** Any change to event names or property keys in the frontend must be reflected in `AppInsightsService.cs` KQL queries, and vice versa.
+2. **Event name mapping (current truth):**
+   - `LabCardClick` — lab title click (has `labTitle`, `category`)
+   - `CloneClick` — clone button (has `repoUrl`)
+   - `VSCodeOpen` — VS Code button (has `repoUrl`)
+   - `CodespaceOpen` — codespace button (has `repoUrl`)
+   - `StarClick` — star button (has `repoUrl`)
+   - `StartMenuOpen` — start menu open (has `labTitle`)
+   - `ShareClick` — share button (has `labTitle`, `shareMethod`)
+   - `FilterChange` — filter applied (has `filterType`, `value`)
+   - `Search` — search (has `query`)
+   - `VideoPlay` — video play (has `videoUrl`, `labTitle`)
+   - `ThemeToggle` — theme switch (has `theme`)
+   - `GitHubOpen` — GitHub link (has `repoUrl`)
+3. **Future improvement:** Action events (CloneClick, VSCodeOpen, etc.) should include `labTitle` so per-lab action breakdown is possible in the dashboard.
+
+**Impact:**
+- **Data (Frontend):** Must keep event names/properties stable, or notify team of changes.
+- **Mikey (Dashboard):** Must update KQL queries when event contract changes.
+- **All:** The `/status` page now provides diagnostics for configuration issues.
+
 ## Governance
 
 - All meaningful changes require team consensus
