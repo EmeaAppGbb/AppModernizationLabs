@@ -101,19 +101,14 @@ module containerApp 'modules/container-app.bicep' = {
 // Role Assignment — Monitoring Reader on App Insights for Container App MI
 // ---------------------------------------------------------------------------
 
-resource appInsightsResource 'Microsoft.Insights/components@2020-02-02' existing = {
-  name: appInsights.outputs.name
-}
-
 var monitoringReaderRoleId = '43d0d8ad-25c7-4714-9337-8ba259a9fe05'
 
-resource monitoringReaderRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(appInsightsResource.id, containerApp.outputs.principalId, monitoringReaderRoleId)
-  scope: appInsightsResource
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', monitoringReaderRoleId)
+module monitoringReaderRole 'modules/role-assignment.bicep' = {
+  name: 'monitoring-reader-role'
+  params: {
+    appInsightsName: appInsights.outputs.name
     principalId: containerApp.outputs.principalId
-    principalType: 'ServicePrincipal'
+    roleDefinitionId: monitoringReaderRoleId
   }
 }
 
