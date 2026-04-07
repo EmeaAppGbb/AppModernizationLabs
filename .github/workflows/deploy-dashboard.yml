@@ -16,6 +16,7 @@ permissions:
 env:
   AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME || 'appmodlabs' }}
   AZURE_LOCATION: ${{ vars.AZURE_LOCATION || 'eastus2' }}
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   deploy:
@@ -32,7 +33,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Install Azure Developer CLI
-        uses: Azure/setup-azd@v3
+        uses: Azure/setup-azd@v2
 
       - name: Provision infrastructure
         run: |
