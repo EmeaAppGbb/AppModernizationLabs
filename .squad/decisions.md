@@ -224,6 +224,80 @@ Dashboard KQL queries referenced event names (`LabClick`, `ShareLab`, `FilterApp
 - **Mikey (Dashboard):** Must update KQL queries when event contract changes.
 - **All:** The `/status` page now provides diagnostics for configuration issues.
 
+### 13. Migrate App Insights Auth from API Key to Managed Identity (Infrastructure)
+
+**Author:** Chunk (DevOps)  
+**Date:** 2026-04-07  
+**Status:** Implemented
+
+**Context**
+
+Application Insights API Keys are deprecated (retiring March 2026). The dashboard reads telemetry via the App Insights REST API and was using an API key for authentication. The Bicep `Microsoft.Insights/components/apikeys` resource is create-only and cannot be redeployed, making key rotation fragile.
+
+**Decision**
+
+Replaced API Key auth with Azure AD (Entra ID) Managed Identity:
+
+1. **System-assigned Managed Identity** enabled on the Container App resource.
+2. **Monitoring Reader role** (`43d0d8ad-25c7-4714-9337-8ba259a9fe05`) assigned to the Container App's MI, scoped to the App Insights resource — via a Bicep role assignment in `main.bicep`.
+3. **Removed all API Key plumbing:** `appInsightsApiKey` parameter, `app-insights-api-key` secret, `AppInsights__ApiKey` env var, `APP_INSIGHTS_API_KEY` from parameters.json and the deploy workflow.
+4. **Added `AppInsights__UseManagedIdentity=true`** env var so the app code can detect MI auth is available and use `DefaultAzureCredential` for token acquisition.
+
+**Impact**
+
+- **App code:** Must switch from API Key header (`x-api-key`) to Bearer token auth using `DefaultAzureCredential` (see Decision #14).
+- **Secrets:** The `APP_INSIGHTS_API_KEY` GitHub secret can be deleted from repo settings.
+- **Operations:** No more secret rotation needed for App Insights API access — MI handles it automatically.
+
+**Files Changed**
+
+| File | Change |
+|------|--------|
+| `infra/modules/container-app.bicep` | Added MI identity, removed API key param/secret/env, added UseManagedIdentity env var, outputs principalId |
+| `infra/main.bicep` | Removed API key param, added Monitoring Reader role assignment on App Insights |
+| `infra/main.parameters.json` | Removed `appInsightsApiKey` entry |
+| `.github/workflows/deploy-dashboard.yml` | Removed `azd env set APP_INSIGHTS_API_KEY` line |
+
+### 14. Migrate App Insights Auth from API Key to Managed Identity (Application)
+
+**Author:** Mikey (Lead/Architect)  
+**Date:** 2026-04-07  
+**Status:** Implemented
+
+**Context**
+
+Application Insights API Keys are deprecated and retiring March 2026. The dashboard previously used `x-api-key` header auth with a manually-created API key. This was fragile (the Bicep `Microsoft.Insights/components/apikeys` resource is create-only and can't be redeployed) and required manual key management.
+
+**Decision**
+
+Replace API Key authentication with Azure AD (Entra ID) Managed Identity using `DefaultAzureCredential` from `Azure.Identity`.
+
+- **Token scope:** `https://api.applicationinsights.io/.default`
+- **Auth header:** `Authorization: Bearer {token}` (replaces `x-api-key`)
+- **Configuration:** Only `AppInsights:AppId` is required; no API key needed
+- **Local dev fallback:** `DefaultAzureCredential` tries Managed Identity → Azure CLI → VS Code → env vars
+
+**Impact**
+
+- **Infrastructure:** Must ensure Container App has system-assigned Managed Identity with "Monitoring Reader" role on the App Insights resource (see Decision #13). The `AppInsights__ApiKey` env var is no longer needed in Bicep/deployment.
+- **Operations:** No more manual API key creation or rotation. Auth is automatic via Azure AD.
+- **appsettings.json:** Empty `ApiKey` field kept for backward compatibility but not used by code.
+- **Build:** NuGet restore and Blazor compilation succeed without warnings.
+
+**Files Changed**
+
+| File | Change |
+|------|--------|
+| `dashboard/Dashboard.csproj` | Added `Azure.Identity` package |
+| `dashboard/src/Dashboard/Services/AppInsightsService.cs` | Bearer token auth, removed ApiKey, added `TestTokenAcquisitionAsync` |
+| `dashboard/src/Dashboard/Components/Pages/Status.razor` | Managed Identity status rows, token acquisition test |
+| `dashboard/src/Dashboard/Components/Pages/Home.razor` | Updated config guide |
+| `dashboard/src/Dashboard/Components/Pages/PageViews.razor` | Updated warning banner |
+| `dashboard/src/Dashboard/Components/Pages/LabEngagement.razor` | Updated warning banner |
+| `dashboard/src/Dashboard/Components/Pages/VideoMetrics.razor` | Updated warning banner |
+| `dashboard/src/Dashboard/Components/Pages/UserActivity.razor` | Updated warning banner |
+| `dashboard/src/Dashboard/Components/Pages/ShareMetrics.razor` | Updated warning banner |
+
 ## Governance
 
 - All meaningful changes require team consensus
