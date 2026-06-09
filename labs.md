@@ -10,3 +10,4 @@ Each repository must contain an `APPMODLAB.MD` file with the required metadata.
 
 <!-- Add lab repository URLs below, one per line -->
 <!-- Format: https://github.com/{owner}/{repo} -->
+https://github.com/EmeaAppGbb/appmodlab-iis-to-azure-app-service
