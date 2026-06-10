@@ -154,5 +154,1043 @@
     "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-legacy-app-to-agentic-development-pipeline",
     "repoOwner": "EmeaAppGbb",
     "repoName": "appmodlab-legacy-app-to-agentic-development-pipeline"
+  },
+  {
+    "title": "AngularJS to React/Angular",
+    "description": "Upgrade AngularJS 1.x SPAs to React 18 or Angular 17 with TypeScript",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure Static Web Apps",
+      "Azure Functions"
+    ],
+    "languages": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "frameworks": [
+      "React",
+      "Angular",
+      "Vite"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "angularjs-migration",
+      "spa-modernization",
+      "typescript",
+      "state-management"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-angularjs-to-react-angular-modern/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-angularjs-to-react-angular-modern",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-angularjs-to-react-angular-modern"
+  },
+  {
+    "title": "Classic ASP to ASP.NET Core",
+    "description": "Modernize VBScript/Classic ASP to ASP.NET Core with security best practices",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure App Service",
+      "Azure SQL Database",
+      "Azure Blob Storage",
+      "Azure Communication Services"
+    ],
+    "languages": [
+      ".NET",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "ASP.NET Core",
+      "Entity Framework Core",
+      "Razor Pages"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "vbscript",
+      "security-remediation",
+      "ado-to-efcore",
+      "sql-injection-fix"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-classic-asp-to-aspnet-core/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-classic-asp-to-aspnet-core",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-classic-asp-to-aspnet-core"
+  },
+  {
+    "title": "COBOL to Java Modernization",
+    "description": "Transform mainframe COBOL batch systems to Java microservices on Azure",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Financial Services",
+    "services": [
+      "Azure Container Apps",
+      "Azure SQL Database",
+      "Azure Service Bus",
+      "Azure API Management"
+    ],
+    "languages": [
+      "COBOL",
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "Drools"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "mainframe-migration",
+      "vsam",
+      "batch-processing",
+      "event-driven"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-cobol-to-java/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-cobol-to-java",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-cobol-to-java"
+  },
+  {
+    "title": "EntLib to .NET 9 DI Migration",
+    "description": "Replace Microsoft Enterprise Library with native .NET Core patterns—logging, DI, exception handling & data access",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Healthcare & Life Sciences",
+    "services": [
+      "Azure App Service",
+      "Azure SQL Database",
+      "Azure Redis Cache",
+      "Application Insights"
+    ],
+    "languages": [
+      "C#",
+      ".NET"
+    ],
+    "frameworks": [
+      "ASP.NET Core",
+      "Entity Framework Core",
+      "Serilog"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "enterprise-library",
+      "dependency-injection",
+      "logging",
+      "ef-core",
+      "dotnet-9"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-dotnet-framework-entlib-to-dotnet9-core-di/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-dotnet-framework-entlib-to-dotnet9-core-di",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-dotnet-framework-entlib-to-dotnet9-core-di"
+  },
+  {
+    "title": ".NET Framework to .NET 9",
+    "description": "Modernize ASP.NET MVC 5 apps to .NET 9 with EF Core and cloud-native architecture",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Education",
+    "services": [
+      "Azure App Service",
+      "Azure SQL Database",
+      "Application Insights"
+    ],
+    "languages": [
+      ".NET",
+      "C#"
+    ],
+    "frameworks": [
+      "ASP.NET Core",
+      "Entity Framework Core"
+    ],
+    "modernizationTools": [
+      ".NET Upgrade Assistant"
+    ],
+    "tags": [
+      "migration",
+      "entity-framework",
+      "identity",
+      "dependency-injection"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-dotnet-framework-to-dotnet9/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-dotnet-framework-to-dotnet9",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-dotnet-framework-to-dotnet9"
+  },
+  {
+    "title": "Getting Started with SQUAD",
+    "description": "Hands-on introduction to SQUAD multi-agent framework for software development",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Agentic Software Development",
+    "industry": "Cross-Industry",
+    "services": [],
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Express.js",
+      "Node.js"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "multi-agent",
+      "task-management",
+      "REST API",
+      "agentic-development",
+      "squad-intro"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-getting-started-with-squad/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-getting-started-with-squad",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-getting-started-with-squad"
+  },
+  {
+    "title": "IIS to Azure App Service",
+    "description": "Migrate IIS-hosted apps to Azure App Service with URL rewrites, Easy Auth & deployment slots",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Infra Modernization",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure App Service",
+      "Azure SQL Database",
+      "Azure Blob Storage",
+      "Azure App Configuration",
+      "Azure Key Vault"
+    ],
+    "languages": [
+      ".NET",
+      "C#"
+    ],
+    "frameworks": [
+      "ASP.NET Core"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "iis-migration",
+      "app-service",
+      "entra-id",
+      "deployment-slots",
+      "url-rewrite"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-iis-to-azure-app-service/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-iis-to-azure-app-service",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-iis-to-azure-app-service"
+  },
+  {
+    "title": "Java EE to Spring Boot",
+    "description": "Migrate Java EE apps to Spring Boot with cloud-native patterns and microservices",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Healthcare & Life Sciences",
+    "services": [
+      "Azure Container Apps",
+      "Azure Database for PostgreSQL",
+      "Azure Service Bus"
+    ],
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "Spring Data JPA",
+      "Thymeleaf"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "ejb-migration",
+      "jpa",
+      "spring-security",
+      "containerization"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-java-ee-to-spring-boot/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-java-ee-to-spring-boot",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-java-ee-to-spring-boot"
+  },
+  {
+    "title": "SSIS to Azure Data Factory",
+    "description": "Modernize legacy SSIS ETL pipelines to Azure Data Factory with mapping data flows and orchestration",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Data Modernization",
+    "industry": "Retail & Consumer Goods",
+    "services": [
+      "Azure Data Factory",
+      "Azure Data Lake Storage Gen2",
+      "Azure Synapse Analytics"
+    ],
+    "languages": [
+      "SQL",
+      "Python",
+      "C#"
+    ],
+    "frameworks": [
+      ".NET"
+    ],
+    "modernizationTools": [
+      "Azure Data Factory"
+    ],
+    "tags": [
+      "ssis",
+      "etl",
+      "data-factory",
+      "azure-pipelines",
+      "data-integration"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-legacy-etl-to-azure-data-factory/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-legacy-etl-to-azure-data-factory",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-legacy-etl-to-azure-data-factory"
+  },
+  {
+    "title": "MongoDB to Azure Cosmos DB",
+    "description": "Migrate MongoDB workloads to Azure Cosmos DB with schema optimization and partition key design",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Data Modernization",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure CosmosDB",
+      "Azure Blob Storage",
+      "Azure AI Search"
+    ],
+    "languages": [
+      "JavaScript",
+      "Node.js"
+    ],
+    "frameworks": [
+      "Express.js",
+      "Mongoose"
+    ],
+    "modernizationTools": [
+      "Azure Database Migration Service"
+    ],
+    "tags": [
+      "mongodb",
+      "cosmosdb",
+      "nosql",
+      "partition-keys",
+      "document-database"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-mongodb-to-azure-cosmos-db/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-mongodb-to-azure-cosmos-db",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-mongodb-to-azure-cosmos-db"
+  },
+  {
+    "title": "Monolith to Microservices with Agents",
+    "description": "Decompose Java monolith to microservices using Spec2Cloud & SQUAD with Strangler Fig pattern",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Education",
+    "services": [
+      "Azure Container Apps",
+      "Azure Service Bus",
+      "Azure API Management",
+      "Azure SQL Database"
+    ],
+    "languages": [
+      "Java"
+    ],
+    "frameworks": [
+      "Spring Boot",
+      "Spring Cloud Gateway"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "microservices",
+      "strangler-fig",
+      "bounded-context",
+      "saga-pattern",
+      "spring-boot"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-monolith-to-microservices-with-agents/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-monolith-to-microservices-with-agents",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-monolith-to-microservices-with-agents"
+  },
+  {
+    "title": "SQL DW to Azure Synapse",
+    "description": "Migrate on-premises SQL Server data warehouse to Azure Synapse Analytics with MPP optimization",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Data Modernization",
+    "industry": "Telco & Media",
+    "services": [
+      "Azure Synapse Analytics",
+      "Azure Data Lake Storage Gen2",
+      "Power BI"
+    ],
+    "languages": [
+      "SQL",
+      "Python"
+    ],
+    "frameworks": [],
+    "modernizationTools": [
+      "PolyBase"
+    ],
+    "tags": [
+      "data-warehouse",
+      "synapse",
+      "mpp",
+      "analytics",
+      "lakehouse"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-on-prem-data-warehouse-to-azure-synapse/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-on-prem-data-warehouse-to-azure-synapse",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-on-prem-data-warehouse-to-azure-synapse"
+  },
+  {
+    "title": "SQL Server to Azure SQL MI",
+    "description": "Migrate on-premises SQL Server databases to Azure SQL Managed Instance with minimal downtime using Azure DMS",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Data Modernization",
+    "industry": "Healthcare & Life Sciences",
+    "services": [
+      "Azure SQL Managed Instance",
+      "Azure Database Migration Service"
+    ],
+    "languages": [
+      "SQL",
+      "T-SQL",
+      "C#"
+    ],
+    "frameworks": [
+      ".NET"
+    ],
+    "modernizationTools": [
+      "Azure Migrate",
+      "Data Migration Assistant"
+    ],
+    "tags": [
+      "sql-server",
+      "managed-instance",
+      "database-migration",
+      "dms",
+      "clr",
+      "service-broker"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-on-prem-sql-server-to-azure-sql-mi/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-on-prem-sql-server-to-azure-sql-mi",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-on-prem-sql-server-to-azure-sql-mi"
+  },
+  {
+    "title": "VMs to Azure Container Apps",
+    "description": "Containerize VM workloads and deploy to Container Apps with Dapr, KEDA auto-scaling & Service Bus",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Infra Modernization",
+    "industry": "Healthcare & Life Sciences",
+    "services": [
+      "Azure Container Apps",
+      "Azure Container Registry",
+      "Azure Service Bus",
+      "Azure Cosmos DB",
+      "Azure Blob Storage"
+    ],
+    "languages": [
+      ".NET",
+      "JavaScript",
+      "Python"
+    ],
+    "frameworks": [
+      "ASP.NET Core",
+      "Express",
+      "Celery"
+    ],
+    "modernizationTools": [
+      "Docker",
+      "Dapr",
+      "KEDA"
+    ],
+    "tags": [
+      "containerization",
+      "container-apps",
+      "dapr",
+      "keda",
+      "multi-language"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-on-prem-vms-to-container-apps/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-on-prem-vms-to-container-apps",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-on-prem-vms-to-container-apps"
+  },
+  {
+    "title": "PHP to Python Flask/FastAPI",
+    "description": "Migrate legacy PHP apps to Python FastAPI with modern async patterns",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure Container Apps",
+      "Azure Database for PostgreSQL",
+      "Azure Blob Storage",
+      "Azure Communication Services"
+    ],
+    "languages": [
+      "Python"
+    ],
+    "frameworks": [
+      "FastAPI",
+      "Flask",
+      "SQLAlchemy"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "php-migration",
+      "fastapi",
+      "mysql-to-postgresql",
+      "api-first"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-php-legacy-to-python-flask-fastapi/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-php-legacy-to-python-flask-fastapi",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-php-legacy-to-python-flask-fastapi"
+  },
+  {
+    "title": "Reverse Engineering with Spec2Cloud",
+    "description": "Deep analysis of legacy enterprise apps with TransFleet ERP - extract specs from complex codebases",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Spec-Driven Development",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure Container Apps"
+    ],
+    "languages": [
+      ".NET",
+      "C#"
+    ],
+    "frameworks": [
+      "ASP.NET Web API",
+      "Entity Framework",
+      "WCF"
+    ],
+    "modernizationTools": [
+      "Spec2Cloud"
+    ],
+    "tags": [
+      "reverse-engineering",
+      "legacy-analysis",
+      "specification-extraction",
+      "bounded-contexts",
+      "wcf"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-reverse-engineering-legacy-apps-with-spec2cloud/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-reverse-engineering-legacy-apps-with-spec2cloud",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-reverse-engineering-legacy-apps-with-spec2cloud"
+  },
+  {
+    "title": "Spec-Driven API Modernization",
+    "description": "Modernize SOAP/REST APIs to unified OpenAPI with CargoLink shipping - WSDL to REST transformation",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Spec-Driven Development",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure API Management",
+      "Azure App Service",
+      "Azure SQL Database"
+    ],
+    "languages": [
+      ".NET",
+      "C#"
+    ],
+    "frameworks": [
+      "WCF",
+      "ASP.NET Core Web API"
+    ],
+    "modernizationTools": [
+      "Spec2Cloud"
+    ],
+    "tags": [
+      "api-modernization",
+      "soap-to-rest",
+      "openapi",
+      "wcf",
+      "api-management"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-spec-driven-api-modernization/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-spec-driven-api-modernization",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-spec-driven-api-modernization"
+  },
+  {
+    "title": "Spec2Cloud .NET Framework Modernization",
+    "description": "Modernize ASP.NET Web Forms to .NET 9 using spec-driven approach with Riverdale permit system",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Spec-Driven Development",
+    "industry": "Government & Public Sector",
+    "services": [
+      "Azure App Service",
+      "Azure SQL Database",
+      "Azure Redis Cache",
+      "Azure Blob Storage"
+    ],
+    "languages": [
+      ".NET",
+      "C#"
+    ],
+    "frameworks": [
+      "ASP.NET Web Forms",
+      "ASP.NET Core",
+      "Blazor",
+      "Entity Framework Core"
+    ],
+    "modernizationTools": [
+      "Spec2Cloud"
+    ],
+    "tags": [
+      "dotnet-framework",
+      "web-forms",
+      "blazor",
+      "modernization",
+      "specifications"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-spec2cloud-dotnet-framework/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-spec2cloud-dotnet-framework",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-spec2cloud-dotnet-framework"
+  },
+  {
+    "title": "Intro to Spec2Cloud",
+    "description": "Learn spec-driven development with OpenShelf Library - generate specs from code and build modern apps",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Spec-Driven Development",
+    "industry": "Education",
+    "services": [],
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Node.js",
+      "Express.js"
+    ],
+    "modernizationTools": [
+      "Spec2Cloud"
+    ],
+    "tags": [
+      "spec-driven",
+      "specification",
+      "architecture",
+      "api-contracts",
+      "methodology"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-spec2cloud-introduction/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-spec2cloud-introduction",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-spec2cloud-introduction"
+  },
+  {
+    "title": "Monolith to Microservices with Spec2Cloud",
+    "description": "Decompose .NET monolith to microservices using spec-driven analysis with UrbanBites food delivery platform",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Spec-Driven Development",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure Container Apps",
+      "Azure SQL Database",
+      "Azure Service Bus",
+      "Azure API Management"
+    ],
+    "languages": [
+      ".NET",
+      "C#"
+    ],
+    "frameworks": [
+      "ASP.NET Core",
+      "Entity Framework Core",
+      "SignalR"
+    ],
+    "modernizationTools": [
+      "Spec2Cloud"
+    ],
+    "tags": [
+      "microservices",
+      "monolith-decomposition",
+      "bounded-contexts",
+      "saga-pattern",
+      "event-driven"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-spec2cloud-monolith-to-microservices-dotnet/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-spec2cloud-monolith-to-microservices-dotnet",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-spec2cloud-monolith-to-microservices-dotnet"
+  },
+  {
+    "title": "Spec2Cloud + SQUAD Integration",
+    "description": "Combine Spec2Cloud specs with SQUAD agentic workflows for UrbanNest property management platform",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Spec-Driven Development",
+    "industry": "Cross-Industry",
+    "services": [
+      "Azure Container Apps",
+      "Azure Service Bus"
+    ],
+    "languages": [
+      ".NET",
+      "TypeScript",
+      "Python"
+    ],
+    "frameworks": [
+      "NestJS",
+      "FastAPI",
+      "React"
+    ],
+    "modernizationTools": [
+      "Spec2Cloud"
+    ],
+    "tags": [
+      "agentic-development",
+      "spec-driven",
+      "openapi",
+      "contract-conformance",
+      "traceability"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-spec2cloud-squad-integration/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-spec2cloud-squad-integration",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-spec2cloud-squad-integration"
+  },
+  {
+    "title": "SQUAD-Driven Feature Development",
+    "description": "Build complete features end-to-end with SQUAD agents on polyglot codebases",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Agentic Software Development",
+    "industry": "Retail & Consumer Goods",
+    "services": [],
+    "languages": [
+      "TypeScript",
+      "Python"
+    ],
+    "frameworks": [
+      "Fastify",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "e-commerce",
+      "recommendations",
+      "multi-language",
+      "feature-development",
+      "review-system"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-squad-driven-feature-development/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-squad-driven-feature-development",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-squad-driven-feature-development"
+  },
+  {
+    "title": "SQUAD + GitHub Issues Workflow",
+    "description": "Automate issue triage, assignment, and delivery with SQUAD and GitHub Actions",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Agentic Software Development",
+    "industry": "Cross-Industry",
+    "services": [],
+    "languages": [
+      "TypeScript"
+    ],
+    "frameworks": [
+      "Next.js",
+      "tRPC",
+      "Prisma",
+      "PostgreSQL",
+      "Tailwind CSS"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "github-actions",
+      "issue-automation",
+      "developer-forum",
+      "workflow-automation",
+      "triage"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-squad-github-issues-workflow/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-squad-github-issues-workflow",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-squad-github-issues-workflow"
+  },
+  {
+    "title": "VB6 to .NET 9 Modernization",
+    "description": "Transform VB6 desktop apps to .NET 9 WPF/Blazor with cloud architecture",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Code Modernization",
+    "industry": "Manufacturing",
+    "services": [
+      "Azure App Service",
+      "Azure SQL Database",
+      "Azure Blob Storage"
+    ],
+    "languages": [
+      ".NET"
+    ],
+    "frameworks": [
+      "Blazor",
+      "WPF",
+      "Entity Framework Core"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "vb6-migration",
+      "desktop-to-web",
+      "access-to-sql",
+      "legacy-modernization"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-vb6-to-dotnet9/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-vb6-to-dotnet9",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-vb6-to-dotnet9"
+  },
+  {
+    "title": "VMware to Azure VMware Solution",
+    "description": "Migrate VMware environments to AVS with HCX, NSX-T networking & ExpressRoute hybrid connectivity",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Infra Modernization",
+    "industry": "Retail & Consumer Goods",
+    "services": [
+      "Azure VMware Solution",
+      "Azure ExpressRoute",
+      "Azure Backup",
+      "Azure Monitor"
+    ],
+    "languages": [
+      ".NET",
+      "PowerShell"
+    ],
+    "frameworks": [],
+    "modernizationTools": [
+      "VMware HCX",
+      "NSX-T",
+      "Bicep",
+      "Terraform"
+    ],
+    "tags": [
+      "vmware",
+      "avs",
+      "hcx",
+      "nsx-t",
+      "hybrid-cloud"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-vmware-to-azure-vmware-solution/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-vmware-to-azure-vmware-solution",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-vmware-to-azure-vmware-solution"
+  },
+  {
+    "title": "Windows Services to Azure Functions",
+    "description": "Convert Windows Services to serverless Azure Functions with blob, timer & queue triggers",
+    "authors": [
+      "marconsilva"
+    ],
+    "category": "Infra Modernization",
+    "industry": "Financial Services",
+    "services": [
+      "Azure Functions",
+      "Azure Blob Storage",
+      "Azure Queue Storage",
+      "Azure SQL Database",
+      "Application Insights"
+    ],
+    "languages": [
+      "C#",
+      ".NET"
+    ],
+    "frameworks": [
+      "Azure Functions",
+      "Durable Functions"
+    ],
+    "modernizationTools": [],
+    "tags": [
+      "windows-services",
+      "serverless",
+      "azure-functions",
+      "durable-functions",
+      "event-driven"
+    ],
+    "extensions": [
+      "github.copilot"
+    ],
+    "thumbnail": "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-windows-services-to-azure-functions/main/assets/thumbnail-gpt-image.png",
+    "video": "",
+    "version": "1.0.0",
+    "repoUrl": "https://github.com/EmeaAppGbb/appmodlab-windows-services-to-azure-functions",
+    "repoOwner": "EmeaAppGbb",
+    "repoName": "appmodlab-windows-services-to-azure-functions"
   }
 ]
